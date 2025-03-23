@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Website Switcher - Airplane Dashboard</title>
+  <!-- Import Bootstrap CSS for styling and collapse functionality -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <!-- Import Orbitron font for a futuristic look -->
+  <link href="https://fonts.googleapis.com/css?family=Orbitron&display=swap" rel="stylesheet">
+  <!-- Import Plotly for interactive graphs -->
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <style>
+    body {
+      background-color: #1a1a1a;
+      color: #e0e0e0;
+      font-family: 'Orbitron', sans-serif;
+    }
+    h1, h2, h3, h5 {
+      color: #f0f0f0;
+    }
+    .container {
+      margin-top: 20px;
+    }
+    /* Forecast and Smart Plug Settings take full width */
+    #forecastSection, #smartPlugSettingsSection {
+      margin-bottom: 40px;
+    }
+    /* Styling for the plug settings panel */
+    #plugSchedulePanel {
+      background: #2a2a2a;
+      border: 1px solid #444;
+      padding: 15px;
+      border-radius: 5px;
+    }
+    .plugEntry {
+      border: 1px solid #555;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 4px;
+      background: #333;
+      position: relative;
+    }
+    .plugStatus {
+      font-weight: bold;
+      margin-top: 5px;
+    }
+    .form-text {
+      font-size: 0.85rem;
+      color: #b0b0b0;
+    }
+    /* Graph styling */
+    #mergedGraph {
+      border: 1px solid #444;
+      padding: 10px;
+      background: #121212;
+      border-radius: 5px;
+      width: 100%;
+      max-width: 100%;
+      height: 400px;
+    }
+    /* Timer styling */
+    #timerContainer {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-left: 15px;
+      flex-wrap: wrap;
+    }
+    #refreshTimer {
+      font-size: 1.5em;
+      font-weight: bold;
+      color: #00ff00;
+      border: 2px solid #00ff00;
+      border-radius: 5px;
+      padding: 5px 10px;
+      white-space: nowrap;
+    }
+    #timerLabel {
+      font-size: 1em;
+      color: #f0f0f0;
+    }
+    /* Advanced Settings styling */
+    .plugAdvancedSettings {
+      margin-top: 10px;
+      padding: 10px;
+      border: 1px solid #555;
+      border-radius: 4px;
+      background: #444;
+    }
+    .forcedRule {
+      border: 1px solid #666;
+      padding: 5px;
+      margin-bottom: 5px;
+      border-radius: 3px;
+      background: #555;
+    }
+    .forcedRule input.form-control, 
+    .forcedRule select.form-control {
+      color: #e0e0e0;
+      background-color: #444;
+    }
+    /* Prevent Screensaver Toggle styling */
+    #screensaverToggleContainer {
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Top Controls: Save/Load Settings and Prevent Screensaver Toggle -->
+    <div id="settingsButtons" class="mb-3 d-flex justify-content-between align-items-center">
+      <div>
+        <button type="button" class="btn btn-success" id="saveSettingsBtn">Save Settings</button>
+        <button type="button" class="btn btn-warning" id="loadSettingsBtn">Load Settings</button>
+      </div>
+      <div id="screensaverToggleContainer" class="form-check">
+        <input class="form-check-input" type="checkbox" id="preventScreensaverToggle">
+        <label class="form-check-label" for="preventScreensaverToggle">Prevent Screensaver</label>
+      </div>
+    </div>
+    
+    <!-- Automatic Geolocation Display -->
+    <div id="locationDisplay" class="mt-3">
+      <p>Attempting to retrieve your location...</p>
+    </div>
+    
+    <!-- Manual Location Input with Timer -->
+    <h2 class="mt-5">Enter Location Manually</h2>
+    <form id="locationForm">
+      <div class="form-group">
+        <input type="text" class="form-control" id="manualLocation" placeholder="Enter village or city name" required>
+        <small class="form-text">Type the name of your village or city to fetch coordinates and weather.</small>
+      </div>
+      <div id="timerContainer">
+        <button type="submit" class="btn btn-secondary">Convert to Coordinates & Retrieve Weather</button>
+        <div id="timerLabel">Next Forecast Refresh:</div>
+        <div id="refreshTimer">00:00:00</div>
+      </div>
+    </form>
+    <div id="manualLocationResult" class="mt-3"></div>
+    
+    <!-- Forecast Section -->
+    <div id="forecastSection" class="mt-5">
+      <h3>Weather & Renewable Energy Forecast</h3>
+      <!-- Slider for renewable energy weight -->
+      <div class="form-group">
+        <label for="energySlider">
+          Importance: <span id="sunWeightLabel">50</span>% Sun / <span id="windWeightLabel">50</span>% Wind
+        </label>
+        <input type="range" class="form-control-range" id="energySlider" min="0" max="100" value="50">
+        <small class="form-text">Adjust the slider to set the weighting between solar (UV) and wind energy. This will update both the renewable energy quality line and (if Optimized is selected) the plug schedules immediately.</small>
+      </div>
+      <!-- Merged Graph Container -->
+      <div id="mergedGraph" class="mt-3"></div>
+    </div>
+    
+    <!-- Smart Plug Settings Section -->
+    <div id="smartPlugSettingsSection" class="mt-5">
+      <h3>Smart Plug Settings</h3>
+      <!-- Schedule Type at the very top -->
+      <div class="form-group">
+        <label>Schedule Type:</label>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="scheduleType" id="userPlanned" value="user" checked>
+          <label class="form-check-label" for="userPlanned">User Planned</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="scheduleType" id="optimized" value="optimized">
+          <label class="form-check-label" for="optimized">Optimized (Weather-based)</label>
+        </div>
+      </div>
+      <!-- Plug Settings Panel -->
+      <div id="plugSchedulePanel">
+        <div id="plugList"></div>
+        <button type="button" class="btn btn-outline-secondary mb-2" id="addPlugBtn">Add Plug</button>
+        <small class="form-text mb-2">Click "Add Plug" to add a new smart plug. Fill in the details below for each plug.</small>
+        <button type="button" class="btn btn-info btn-block" id="updatePlugsBtn">Update Plug Schedules</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Import jQuery (Slim version) and Bootstrap JS for collapse functionality -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+  <script>
+    /*************************************
+     * 1) GLOBAL VARIABLES & TIMER SETUP *
+     *************************************/
+    let weatherTimeData = null;
+    let weatherWindData = null;
+    let weatherUvData = null;
+    let globalLineTraces = [];
+    let globalMergedLayout = null;
+    
+    // Timer: updates once per second to show time until next top-of-hour refresh
+    function updateTimer() {
+      const now = new Date();
+      const nextHour = new Date(now);
+      nextHour.setMinutes(0, 0, 0);
+      nextHour.setHours(now.getHours() + 1);
+      const diff = nextHour - now;
+      const seconds = Math.floor(diff / 1000) % 60;
+      const minutes = Math.floor(diff / (1000 * 60)) % 60;
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      document.getElementById('refreshTimer').innerText =
+        (hours < 10 ? "0" + hours : hours) + ":" +
+        (minutes < 10 ? "0" + minutes : minutes) + ":" +
+        (seconds < 10 ? "0" + seconds : seconds);
+    }
+    setInterval(updateTimer, 1000);
+    updateTimer(); // Initial call
+
+    /**************************************
+     * 2) SAVE/LOAD SETTINGS FROM STORAGE *
+     **************************************/
+    function saveSettings() {
+      const settings = {
+        manualLocation: document.getElementById('manualLocation').value,
+        energySlider: document.getElementById('energySlider').value,
+        scheduleType: document.querySelector('input[name="scheduleType"]:checked').value,
+        plugs: []
+      };
+      const plugEntries = document.querySelectorAll('.plugEntry');
+      plugEntries.forEach(entry => {
+        const plug = {
+          name: entry.querySelector('.plugName').value,
+          onHours: entry.querySelector('.plugOnHours').value,
+          totalHours: entry.querySelector('.plugTotalHours').value,
+          kwh: entry.querySelector('.plugKwh').value,
+          webhookOn: entry.querySelector('.webhookOn').value,
+          webhookOff: entry.querySelector('.webhookOff').value,
+          forcedRules: []
+        };
+        entry.querySelectorAll('.forcedRule').forEach(rule => {
+          const daysSelect = rule.querySelector('.forcedRuleDays');
+          const selectedDays = Array.from(daysSelect.selectedOptions).map(opt => opt.value);
+          plug.forcedRules.push({
+            days: selectedDays,
+            start: rule.querySelector('.forcedRuleStart').value,
+            end: rule.querySelector('.forcedRuleEnd').value,
+            state: rule.querySelector('.forcedRuleState').value
+          });
+        });
+        settings.plugs.push(plug);
+      });
+      localStorage.setItem("dashboardSettings", JSON.stringify(settings));
+      alert("Settings saved.");
+    }
+    
+    function loadSettings() {
+      const settingsStr = localStorage.getItem("dashboardSettings");
+      if (!settingsStr) { alert("No settings found."); return; }
+      const settings = JSON.parse(settingsStr);
+      document.getElementById('manualLocation').value = settings.manualLocation;
+      document.getElementById('energySlider').value = settings.energySlider;
+      document.getElementById('sunWeightLabel').textContent = settings.energySlider;
+      document.getElementById('windWeightLabel').textContent = 100 - settings.energySlider;
+      document.querySelector(`input[name="scheduleType"][value="${settings.scheduleType}"]`).checked = true;
+      const plugList = document.getElementById('plugList');
+      plugList.innerHTML = "";
+      settings.plugs.forEach((plug) => { addPlug(plug); });
+      alert("Settings loaded.");
+      document.getElementById("locationForm").dispatchEvent(new Event('submit'));
+    }
+    document.getElementById('saveSettingsBtn').addEventListener('click', saveSettings);
+    document.getElementById('loadSettingsBtn').addEventListener('click', loadSettings);
+    
+    /****************************************
+     * 3) GEOLOCATION & WEATHER RETRIEVAL    *
+     ****************************************/
+    function setLocationDisplay(data, latitude, longitude) {
+      const address = data.address || {};
+      const place = address.city || address.town || address.village || address.hamlet || "";
+      let displayText = `Your coordinates: Latitude: ${latitude.toFixed(4)}, Longitude: ${longitude.toFixed(4)}`;
+      if (place) { displayText += `<br>Location: ${place}`; }
+      if (address.country) { displayText += `<br>Country: ${address.country}`; }
+      document.getElementById('locationDisplay').innerHTML = `<p>${displayText}</p>`;
+      const manualField = document.getElementById('manualLocation');
+      if (!manualField.value && place) { manualField.value = place; }
+    }
+    
+    const locationDisplay = document.getElementById('locationDisplay');
+    locationDisplay.innerHTML = '<p>Attempting to retrieve your location...</p>';
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+        const reverseUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1`;
+        fetch(reverseUrl)
+          .then(response => response.json())
+          .then(data => { setLocationDisplay(data, latitude, longitude); })
+          .catch(error => { locationDisplay.innerHTML = `<p>Your coordinates: Latitude: ${latitude.toFixed(4)}, Longitude: ${longitude.toFixed(4)}</p>`; });
+      }, function(error) { locationDisplay.innerHTML = `<p>Error getting location: ${error.message}</p>`; });
+    } else {
+      locationDisplay.innerHTML = '<p>Geolocation is not supported by this browser.</p>';
+    }
+    setTimeout(function() {
+      if (locationDisplay.innerHTML.includes("Attempting to retrieve your location")) {
+        locationDisplay.innerHTML = '<p>Automatic location retrieval is taking too long. Please use the manual input below.</p>';
+      }
+    }, 5000);
+    
+    // Manual location form
+    document.getElementById('locationForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const locationName = document.getElementById('manualLocation').value;
+      const manualLocationResult = document.getElementById('manualLocationResult');
+      manualLocationResult.innerHTML = '<p>Converting location to coordinates...</p>';
+      const url = `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=1&q=${encodeURIComponent(locationName)}`;
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          if (data && data.length > 0) {
+            const lat = data[0].lat;
+            const lon = data[0].lon;
+            const country = (data[0].address && data[0].address.country) ? data[0].address.country : '';
+            manualLocationResult.innerHTML = `<p>Coordinates for ${locationName}: Latitude: ${parseFloat(lat).toFixed(4)}, Longitude: ${parseFloat(lon).toFixed(4)}${country ? `<br>Country: ${country}` : ""}</p>`;
+            const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=uv_index,wind_speed_80m&forecast_days=3&past_days=1&timezone=Europe%2FAmsterdam&location_mode=csv_coordinates`;
+            fetch(weatherUrl)
+              .then(response => response.json())
+              .then(weatherData => {
+                if (weatherData && weatherData.hourly && weatherData.hourly.time) {
+                  weatherTimeData = weatherData.hourly.time;
+                  weatherWindData = weatherData.hourly.wind_speed_80m;
+                  weatherUvData = weatherData.hourly.uv_index;
+                  const traceWind = {
+                    x: weatherTimeData,
+                    y: weatherWindData,
+                    mode: 'lines',
+                    name: 'Wind Speed at 80m (m/s)',
+                    yaxis: 'y1'
+                  };
+                  const traceUV = {
+                    x: weatherTimeData,
+                    y: weatherUvData,
+                    mode: 'lines',
+                    name: 'UV Index',
+                    yaxis: 'y2'
+                  };
+                  const weight = parseInt(document.getElementById('energySlider').value, 10) / 100;
+                  const computeRenewable = w => weatherTimeData.map((_, i) => w * parseFloat(weatherUvData[i]) + (1 - w) * parseFloat(weatherWindData[i]));
+                  const traceRenewable = {
+                    x: weatherTimeData,
+                    y: computeRenewable(weight),
+                    mode: 'lines',
+                    name: 'Renewable Energy Quality',
+                    yaxis: 'y3'
+                  };
+                  globalLineTraces = [traceWind, traceUV, traceRenewable];
+                  
+                  globalMergedLayout = {
+                    paper_bgcolor: '#222222',
+                    plot_bgcolor: '#222222',
+                    font: { color: '#ffffff', family: 'Orbitron, sans-serif', size: 10 },
+                    title: {
+                      text: 'Forecast, Renewable Energy & Plug Schedule (Toggle traces via legend)',
+                      font: { size: 12, color: '#ffffff', family: 'Orbitron, sans-serif' }
+                    },
+                    xaxis: { 
+                      title: 'Time',
+                      tickangle: -45,
+                      automargin: true,
+                      tickfont: { size: 12 },  // Increased tick font size
+                      rangeselector: {
+                        bgcolor: '#444',
+                        activecolor: '#00aa00',
+                        font: { color: '#ffffff', size: 10 },
+                        buttons: [
+                          {count: 6, label: '6h', step: 'hour', stepmode: 'backward'},
+                          {count: 12, label: '12h', step: 'hour', stepmode: 'backward'},
+                          {count: 1, label: '1d', step: 'day', stepmode: 'backward'},
+                          {step: 'all'}
+                        ]
+                      },
+                      rangeslider: {}
+                    },
+                    yaxis: {
+                      title: 'Wind Speed (m/s)',
+                      automargin: true,
+                      title_standoff: 10,
+                      tickfont: { size: 9 }
+                    },
+                    yaxis2: {
+                      title: 'UV Index',
+                      overlaying: 'y',
+                      side: 'right',
+                      automargin: true,
+                      title_standoff: 10,
+                      tickfont: { size: 9 }
+                    },
+                    yaxis3: {
+                      title: 'Renewable Energy Score',
+                      anchor: 'free',
+                      overlaying: 'y',
+                      side: 'left',
+                      position: 0.04,
+                      automargin: true,
+                      title_standoff: 10,
+                      tickfont: { size: 9 }
+                    },
+                    legend: {
+                      orientation: 'v',
+                      x: 1.02,
+                      y: 1,
+                      xanchor: 'left',
+                      font: { size: 9 },
+                      bgcolor: '#333333'
+                    },
+                    barmode: 'stack',
+                    hovermode: 'closest',
+                    height: 400,
+                    margin: { l: 50, r: 100, t: 60, b: 70 }
+                  };
+                  
+                  Plotly.newPlot('mergedGraph', globalLineTraces, globalMergedLayout, { responsive: true });
+                  updatePlugSchedules();
+                  checkPlugStates();  // Immediately check plug state on weather update
+                } else {
+                  document.getElementById('mergedGraph').innerHTML = '<p>No weather data available for the selected period.</p>';
+                }
+              })
+              .catch(error => { document.getElementById('mergedGraph').innerHTML = `<p>Error fetching weather data: ${error.message}</p>`; });
+          } else {
+            manualLocationResult.innerHTML = `<p>No results found for "${locationName}".</p>`;
+          }
+        })
+        .catch(error => { manualLocationResult.innerHTML = `<p>Error converting location: ${error.message}</p>`; });
+    });
+    
+    /*******************************************
+     * 4) ENERGY SLIDER & PLUG SCHEDULE UPDATE  *
+     *******************************************/
+    document.getElementById('energySlider').addEventListener('input', function() {
+      const sliderValue = parseInt(this.value, 10);
+      document.getElementById('sunWeightLabel').textContent = sliderValue;
+      document.getElementById('windWeightLabel').textContent = 100 - sliderValue;
+      if (!weatherTimeData || !weatherWindData || !weatherUvData) return;
+      const weight = sliderValue / 100;
+      const newRenewable = weatherTimeData.map((_, i) => weight * parseFloat(weatherUvData[i]) + (1 - weight) * parseFloat(weatherWindData[i]));
+      Plotly.restyle('mergedGraph', { y: [newRenewable] }, [2]);
+      if (document.querySelector('input[name="scheduleType"]:checked').value === "optimized") {
+        updatePlugSchedules();
+        checkPlugStates();
+      }
+    });
+    
+    // When schedule type changes, update the graph and immediately check plug states
+    document.querySelectorAll('input[name="scheduleType"]').forEach(radio => {
+      radio.addEventListener('change', function() {
+        updatePlugSchedules();
+        checkPlugStates();
+      });
+    });
+    
+    // Helper: group forecast times by day
+    function groupTimesByDay(timeData) {
+      const groups = {};
+      timeData.forEach((t, i) => {
+        let date = t.split("T")[0];
+        if (!groups[date]) groups[date] = { times: [], indices: [] };
+        groups[date].times.push(t);
+        groups[date].indices.push(i);
+      });
+      const sortedDates = Object.keys(groups).sort();
+      return sortedDates.map(date => groups[date]);
+    }
+    
+    // Uniform schedule for a single day
+    function computePlugScheduleForDay(onHours, totalHours, dayTimes) {
+      const dayLength = dayTimes.length;
+      function computeCycle(onHours, totalHours) {
+        onHours = Math.min(onHours, totalHours);
+        let pattern = new Array(totalHours).fill(0);
+        let positions = [];
+        for (let i = 0; i < onHours; i++) {
+          let pos = Math.round((i + 0.5) * totalHours / onHours - 0.5);
+          if (pos < 0) pos = 0;
+          if (pos >= totalHours) pos = totalHours - 1;
+          positions.push(pos);
+        }
+        positions.forEach(p => { pattern[p] = 1; });
+        return pattern;
+      }
+      const cycle = computeCycle(onHours, totalHours);
+      let schedule = [];
+      const cycles = Math.floor(dayLength / totalHours);
+      const remainder = dayLength % totalHours;
+      for (let i = 0; i < cycles; i++) { schedule = schedule.concat(cycle); }
+      schedule = schedule.concat(cycle.slice(0, remainder));
+      return schedule;
+    }
+    
+    // Optimized schedule for a single day
+    function computeOptimalPlugScheduleForDay(onHours, totalHours, dayGroup, weight) {
+      const dayTimes = dayGroup.times;
+      const indices = dayGroup.indices;
+      const dayLength = dayTimes.length;
+      let schedule = [];
+      const cycles = Math.floor(dayLength / totalHours);
+      const remainder = dayLength % totalHours;
+      for (let c = 0; c < cycles; c++) {
+        const cycleIndices = indices.slice(c * totalHours, (c + 1) * totalHours);
+        const qualityCycle = cycleIndices.map(i => weight * parseFloat(weatherUvData[i]) + (1 - weight) * parseFloat(weatherWindData[i]));
+        let pattern = new Array(totalHours).fill(0);
+        let idxs = Array.from({length: totalHours}, (_, idx) => idx);
+        idxs.sort((a, b) => qualityCycle[b] - qualityCycle[a]);
+        for (let k = 0; k < Math.min(onHours, totalHours); k++) { pattern[idxs[k]] = 1; }
+        schedule = schedule.concat(pattern);
+      }
+      if (remainder > 0) {
+        const cycleIndices = indices.slice(cycles * totalHours);
+        const qualityCycle = cycleIndices.map(i => weight * parseFloat(weatherUvData[i]) + (1 - weight) * parseFloat(weatherWindData[i]));
+        let pattern = new Array(remainder).fill(0);
+        let idxs = Array.from({length: remainder}, (_, idx) => idx);
+        idxs.sort((a, b) => qualityCycle[b] - qualityCycle[a]);
+        for (let k = 0; k < Math.min(onHours, remainder); k++) { pattern[idxs[k]] = 1; }
+        schedule = schedule.concat(pattern);
+      }
+      return schedule;
+    }
+    
+    // Apply forced schedule rules to override computed schedule
+    function applyForcedRules(entry, schedule) {
+      const forcedRules = entry.querySelectorAll('.forcedRule');
+      forcedRules.forEach(rule => {
+        const daysSelect = rule.querySelector('.forcedRuleDays');
+        const selectedDays = Array.from(daysSelect.selectedOptions).map(opt => opt.value);
+        const startTime = rule.querySelector('.forcedRuleStart').value;
+        const endTime = rule.querySelector('.forcedRuleEnd').value;
+        const forcedState = rule.querySelector('.forcedRuleState').value; // "on" or "off"
+        schedule = schedule.map((val, index) => {
+          const ts = new Date(weatherTimeData[index]);
+          const dayName = ts.toLocaleDateString('en-US', { weekday: 'short' });
+          if (!selectedDays.includes(dayName)) return val;
+          const minutes = ts.getHours() * 60 + ts.getMinutes();
+          const [startH, startM] = startTime.split(':').map(Number);
+          const [endH, endM] = endTime.split(':').map(Number);
+          const startMinutes = startH * 60 + startM;
+          const endMinutes = endH * 60 + endM;
+          let inInterval = (startMinutes <= endMinutes) 
+                           ? (minutes >= startMinutes && minutes < endMinutes)
+                           : (minutes >= startMinutes || minutes < endMinutes);
+          if (inInterval) return forcedState === "on" ? 1 : 0;
+          return val;
+        });
+      });
+      return schedule;
+    }
+    
+    /*************************************
+     * 5) ADD & DELETE PLUG FUNCTIONALITY*
+     *************************************/
+    function addPlug(plugData = null) {
+      const plugList = document.getElementById('plugList');
+      const plugIndex = plugList.children.length + 1;
+      const plugDiv = document.createElement('div');
+      plugDiv.className = 'plugEntry';
+      plugDiv.innerHTML = `
+        <div class="form-group">
+          <input type="text" class="form-control plugName" placeholder="Plug Name" value="${plugData ? plugData.name : "Plug " + plugIndex}">
+          <small class="form-text">Enter a unique name for this smart plug.</small>
+        </div>
+        <div class="form-row">
+          <div class="col">
+            <input type="number" class="form-control plugOnHours" placeholder="On Hours" min="0" value="${plugData ? plugData.onHours : 4}">
+            <small class="form-text">Number of hours this plug should be ON per cycle.</small>
+          </div>
+          <div class="col">
+            <input type="number" class="form-control plugTotalHours" placeholder="Total Hours" min="1" value="${plugData ? plugData.totalHours : 7}">
+            <small class="form-text">Total hours in each cycle (e.g., 7 hours).</small>
+          </div>
+          <div class="col">
+            <input type="number" class="form-control plugKwh" placeholder="kWh" min="0" value="${plugData ? plugData.kwh : 1}">
+            <small class="form-text">Power consumption in kWh when the plug is ON.</small>
+          </div>
+        </div>
+        <div class="form-group mt-2">
+          <input type="text" class="form-control webhookOn" placeholder="Webhook URL for ON" value="${plugData ? plugData.webhookOn : ""}">
+          <small class="form-text">Enter the webhook URL to turn this plug ON.</small>
+          <button type="button" class="btn btn-sm btn-secondary testWebhookOn mt-1">Test ON Webhook</button>
+        </div>
+        <div class="form-group">
+          <input type="text" class="form-control webhookOff" placeholder="Webhook URL for OFF" value="${plugData ? plugData.webhookOff : ""}">
+          <small class="form-text">Enter the webhook URL to turn this plug OFF.</small>
+          <button type="button" class="btn btn-sm btn-secondary testWebhookOff mt-1">Test OFF Webhook</button>
+        </div>
+        <button type="button" class="btn btn-danger btn-sm deletePlug">Delete Plug</button>
+        <div class="plugStatus" style="margin-top:5px;">Status: UNKNOWN</div>
+        <!-- Advanced Settings: Forced Schedule & History Log -->
+        <button class="btn btn-sm btn-info mt-2 toggleAdvancedSettings" type="button" data-toggle="collapse" data-target="#advancedSettings-${plugIndex}">Toggle Advanced Settings</button>
+        <div class="collapse plugAdvancedSettings" id="advancedSettings-${plugIndex}">
+          <div class="forcedScheduleSection mt-2">
+            <h5>Forced Schedule Settings</h5>
+            <div class="forcedRulesContainer"></div>
+            <button type="button" class="btn btn-secondary btn-sm addForcedRule">Add Forced Rule</button>
+            <small class="form-text">Define forced on/off rules (select multiple days if needed, and set the same hours for them).</small>
+          </div>
+          <div class="historyLogSection mt-3">
+            <h5>History Log</h5>
+            <table class="table table-sm historyLogTable">
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Status</th>
+                  <th>Duration</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      `;
+      plugList.appendChild(plugDiv);
+      
+      // Initialize history log array on the plug element
+      plugDiv.historyLog = [];
+      
+      // Delete plug functionality
+      plugDiv.querySelector('.deletePlug').addEventListener('click', function() {
+        plugList.removeChild(plugDiv);
+      });
+      // Test webhook buttons
+      plugDiv.querySelector('.testWebhookOn').addEventListener('click', function() {
+        const webhook = plugDiv.querySelector('.webhookOn').value;
+        if (webhook) { const img = new Image(); img.src = webhook; console.log("Called webhook ON: " + webhook); }
+        else { alert("Please enter a webhook URL for ON"); }
+      });
+      plugDiv.querySelector('.testWebhookOff').addEventListener('click', function() {
+        const webhook = plugDiv.querySelector('.webhookOff').value;
+        if (webhook) { const img = new Image(); img.src = webhook; console.log("Called webhook OFF: " + webhook); }
+        else { alert("Please enter a webhook URL for OFF"); }
+      });
+      
+      // Add Forced Rule functionality
+      plugDiv.querySelector('.addForcedRule').addEventListener('click', function() {
+        const container = plugDiv.querySelector('.forcedRulesContainer');
+        const ruleDiv = document.createElement('div');
+        ruleDiv.className = 'forcedRule row';
+        ruleDiv.innerHTML = `
+          <div class="col-4">
+            <label>Days:</label>
+            <select class="form-control forcedRuleDays" multiple size="3">
+              <option value="Mon">Mon</option>
+              <option value="Tue">Tue</option>
+              <option value="Wed">Wed</option>
+              <option value="Thu">Thu</option>
+              <option value="Fri">Fri</option>
+              <option value="Sat">Sat</option>
+              <option value="Sun">Sun</option>
+            </select>
+          </div>
+          <div class="col-3">
+            <label>Start Time:</label>
+            <input type="time" class="form-control forcedRuleStart" value="08:00">
+          </div>
+          <div class="col-3">
+            <label>End Time:</label>
+            <input type="time" class="form-control forcedRuleEnd" value="09:00">
+          </div>
+          <div class="col-2">
+            <label>State:</label>
+            <select class="form-control forcedRuleState">
+              <option value="on">ON</option>
+              <option value="off">OFF</option>
+            </select>
+          </div>
+          <div class="col-12">
+            <button type="button" class="btn btn-danger btn-sm removeForcedRule mt-1">Remove Rule</button>
+          </div>
+        `;
+        container.appendChild(ruleDiv);
+        ruleDiv.querySelector('.removeForcedRule').addEventListener('click', function() { container.removeChild(ruleDiv); });
+      });
+      
+      // When advanced section is shown, update the history log table
+      $(`#advancedSettings-${plugIndex}`).on('shown.bs.collapse', function () { updateHistoryTable(plugDiv); });
+      
+      // Populate forced rules if plugData exists
+      if (plugData && plugData.forcedRules) {
+        plugData.forcedRules.forEach(rule => {
+          const container = plugDiv.querySelector('.forcedRulesContainer');
+          const ruleDiv = document.createElement('div');
+          ruleDiv.className = 'forcedRule row';
+          ruleDiv.innerHTML = `
+            <div class="col-4">
+              <label>Days:</label>
+              <select class="form-control forcedRuleDays" multiple size="3">
+                <option value="Mon">Mon</option>
+                <option value="Tue">Tue</option>
+                <option value="Wed">Wed</option>
+                <option value="Thu">Thu</option>
+                <option value="Fri">Fri</option>
+                <option value="Sat">Sat</option>
+                <option value="Sun">Sun</option>
+              </select>
+            </div>
+            <div class="col-3">
+              <label>Start Time:</label>
+              <input type="time" class="form-control forcedRuleStart" value="${rule.start}">
+            </div>
+            <div class="col-3">
+              <label>End Time:</label>
+              <input type="time" class="form-control forcedRuleEnd" value="${rule.end}">
+            </div>
+            <div class="col-2">
+              <label>State:</label>
+              <select class="form-control forcedRuleState">
+                <option value="on" ${rule.state === "on" ? "selected" : ""}>ON</option>
+                <option value="off" ${rule.state === "off" ? "selected" : ""}>OFF</option>
+              </select>
+            </div>
+            <div class="col-12">
+              <button type="button" class="btn btn-danger btn-sm removeForcedRule mt-1">Remove Rule</button>
+            </div>
+          `;
+          container.appendChild(ruleDiv);
+          ruleDiv.querySelector('.removeForcedRule').addEventListener('click', function() { container.removeChild(ruleDiv); });
+        });
+      }
+    }
+    document.getElementById('addPlugBtn').addEventListener('click', function() { addPlug(); });
+    
+    // Update history log table for a given plug element (with Duration column)
+    function updateHistoryTable(plugEntry) {
+      const tableBody = plugEntry.querySelector('.historyLogTable tbody');
+      tableBody.innerHTML = "";
+      if (plugEntry.historyLog && plugEntry.historyLog.length > 0) {
+        plugEntry.historyLog.forEach((entry, i) => {
+          let durationText = "";
+          if (i > 0 && plugEntry.historyLog[i - 1].timestamp) {
+            const diff = entry.timestamp - plugEntry.historyLog[i - 1].timestamp;
+            const hours = Math.floor(diff / 3600000);
+            const minutes = Math.floor((diff % 3600000) / 60000);
+            durationText = `${hours}h ${minutes}m`;
+          }
+          const row = document.createElement('tr');
+          row.innerHTML = `<td>${entry.time}</td><td>${entry.state}</td><td>${durationText}</td>`;
+          tableBody.appendChild(row);
+        });
+      } else {
+        const row = document.createElement('tr');
+        row.innerHTML = `<td colspan="3">No history available.</td>`;
+        tableBody.appendChild(row);
+      }
+    }
+    
+    /***************************************
+     * 6) UPDATE PLUG SCHEDULES ON DEMAND  *
+     ***************************************/
+    function updatePlugSchedules() {
+      if (!weatherTimeData) { alert("Weather data not available yet."); return; }
+      const dayGroups = groupTimesByDay(weatherTimeData);
+      const plugEntries = document.querySelectorAll('.plugEntry');
+      let plugTraces = [];
+      let optimalPlugTraces = [];
+      const currentWeight = parseInt(document.getElementById('energySlider').value, 10) / 100;
+      plugEntries.forEach(entry => {
+        const name = entry.querySelector('.plugName').value || "Unnamed Plug";
+        const onHours = parseInt(entry.querySelector('.plugOnHours').value, 10);
+        const totalHours = parseInt(entry.querySelector('.plugTotalHours').value, 10);
+        const kwh = parseFloat(entry.querySelector('.plugKwh').value);
+        let uniformSchedule = [];
+        let optimalSchedule = [];
+        dayGroups.forEach(group => {
+          const dayUniform = computePlugScheduleForDay(onHours, totalHours, group.times);
+          const dayOptimal = computeOptimalPlugScheduleForDay(onHours, totalHours, group, currentWeight);
+          uniformSchedule = uniformSchedule.concat(dayUniform);
+          optimalSchedule = optimalSchedule.concat(dayOptimal);
+        });
+        uniformSchedule = applyForcedRules(entry, uniformSchedule);
+        optimalSchedule = applyForcedRules(entry, optimalSchedule);
+        const traceUniform = {
+          x: weatherTimeData,
+          y: uniformSchedule.map(val => val * kwh),
+          type: 'bar',
+          name: name,
+          marker: { opacity: 0.7 }
+        };
+        const traceOptimal = {
+          x: weatherTimeData,
+          y: optimalSchedule.map(val => val * kwh),
+          type: 'bar',
+          name: "Optimal: " + name,
+          marker: { opacity: 0.7, color: 'blue' }
+        };
+        plugTraces.push(traceUniform);
+        optimalPlugTraces.push(traceOptimal);
+      });
+      const scheduleType = document.querySelector('input[name="scheduleType"]:checked').value;
+      let selectedPlugTraces = scheduleType === "user" ? plugTraces : optimalPlugTraces;
+      const allTraces = globalLineTraces.concat(selectedPlugTraces);
+      globalMergedLayout.barmode = 'stack';
+      Plotly.newPlot('mergedGraph', allTraces, globalMergedLayout, { responsive: true });
+    }
+    
+    /*********************************************
+     * checkPlugStates(): Evaluate current state *
+     * and trigger webhooks immediately          *
+     *********************************************/
+    function checkPlugStates() {
+      if (!weatherTimeData) return;
+      const now = new Date();
+      let currentIndex = 0;
+      let minDiff = Infinity;
+      weatherTimeData.forEach((t, i) => {
+        const diff = Math.abs(new Date(t) - now);
+        if (diff < minDiff) { minDiff = diff; currentIndex = i; }
+      });
+      const plugEntries = document.querySelectorAll('.plugEntry');
+      plugEntries.forEach((entry, idx) => {
+        const scheduleType = document.querySelector('input[name="scheduleType"]:checked').value;
+        const currentWeight = parseInt(document.getElementById('energySlider').value, 10) / 100;
+        const onHours = parseInt(entry.querySelector('.plugOnHours').value, 10);
+        const totalHours = parseInt(entry.querySelector('.plugTotalHours').value, 10);
+        const dayGroups = groupTimesByDay(weatherTimeData);
+        let schedule = [];
+        dayGroups.forEach(group => {
+          if (scheduleType === "user") { schedule = schedule.concat(computePlugScheduleForDay(onHours, totalHours, group.times)); }
+          else { schedule = schedule.concat(computeOptimalPlugScheduleForDay(onHours, totalHours, group, currentWeight)); }
+        });
+        schedule = applyForcedRules(entry, schedule);
+        const nowDate = new Date().toISOString().split("T")[0];
+        const currentGroup = dayGroups.find(g => g.times[0].split("T")[0] === nowDate);
+        if (currentGroup) {
+          const groupStart = currentGroup.indices[0];
+          const currentIndexInGroup = currentIndex - groupStart;
+          if (currentIndexInGroup >= 0 && currentIndexInGroup < currentGroup.times.length) {
+            const cycleIndex = Math.floor(currentIndexInGroup / totalHours);
+            const cycleStart = cycleIndex * totalHours;
+            let onCount = 0;
+            for (let j = groupStart + cycleStart; j <= groupStart + currentIndexInGroup; j++) {
+              if (schedule[j] === 1) onCount++;
+            }
+            if (onCount < onHours) { schedule[currentIndex] = 1; }
+          }
+        }
+        const desiredState = schedule[currentIndex] === 1;
+        let lastState = entry.dataset.state;
+        let newState = desiredState ? "on" : "off";
+        if (lastState !== newState) {
+          if (newState === "on") {
+            const webhook = entry.querySelector('.webhookOn').value;
+            if (webhook) { const img = new Image(); img.src = webhook; console.log("Triggered ON webhook for plug", idx, webhook); }
+          } else {
+            const webhook = entry.querySelector('.webhookOff').value;
+            if (webhook) { const img = new Image(); img.src = webhook; console.log("Triggered OFF webhook for plug", idx, webhook); }
+          }
+          entry.dataset.state = newState;
+          const logEntry = { time: new Date().toLocaleTimeString(), state: newState.toUpperCase(), timestamp: new Date().getTime() };
+          if (!entry.historyLog) entry.historyLog = [];
+          entry.historyLog.push(logEntry);
+          if (entry.historyLog.length > 50) entry.historyLog.shift();
+          updateHistoryTable(entry);
+        }
+        let statusIndicator = entry.querySelector('.plugStatus');
+        if (statusIndicator) { statusIndicator.innerText = "Status: " + newState.toUpperCase(); }
+      });
+    }
+    
+    /*************************************************************
+     * 7) PERIODIC CHECK FOR WEBHOOK TRIGGERS, FORCED RULES & HISTORY UPDATE *
+     *************************************************************/
+    setInterval(function() { checkPlugStates(); }, 60000);
+    
+    /*********************************************
+     * 8) HOURLY WEATHER REFRESH (TOP OF THE HOUR) *
+     *********************************************/
+    function refreshWeather() {
+      document.getElementById("locationForm").dispatchEvent(new Event('submit'));
+    }
+    setInterval(refreshWeather, 3600000);
+
+    /****************************************************
+     * 9) PREVENT SCREENSAVER: Wake Lock Toggle Feature   *
+     ****************************************************/
+    let wakeLock = null;
+    async function requestWakeLock() {
+      try {
+        wakeLock = await navigator.wakeLock.request('screen');
+        console.log('Wake Lock is active');
+        wakeLock.addEventListener('release', () => {
+          console.log('Wake Lock was released');
+        });
+      } catch (err) {
+        console.error(`${err.name}, ${err.message}`);
+      }
+    }
+    function releaseWakeLock() {
+      if (wakeLock !== null) {
+        wakeLock.release();
+        wakeLock = null;
+        console.log('Wake Lock released');
+      }
+    }
+    const screensaverToggle = document.getElementById('preventScreensaverToggle');
+    screensaverToggle.addEventListener('change', function() {
+      if (this.checked) { requestWakeLock(); }
+      else { releaseWakeLock(); }
+    });
+  </script>
+</body>
+</html>
