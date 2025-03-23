@@ -1,6 +1,5 @@
 # AISwitch
 
-<!--
   Website Switcher - Airplane Dashboard
 
   OVERVIEW:
@@ -58,4 +57,3 @@
   - Adjust the energy slider to influence optimization.
   - Save/load preferences using the buttons at the top.
   - Monitor schedule execution and plug state live via graph and plug panel.
--->
