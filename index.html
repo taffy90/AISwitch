@@ -122,8 +122,11 @@
     
     <!-- Automatic Geolocation Display -->
     <div id="locationDisplay" class="mt-3">
-      <p>Attempting to retrieve your location...</p>
+      <p>Location will appear here when retrieved.</p>
     </div>
+    
+    <!-- New Button to get Geolocation Automatically -->
+    <button type="button" id="getGeoBtn" class="btn btn-primary mb-3">Get Geolocation Automatically</button>
     
     <!-- Manual Location Input with Timer -->
     <h2 class="mt-5">Enter Location Manually</h2>
@@ -133,7 +136,7 @@
         <small class="form-text">Type the name of your village or city to fetch coordinates and weather.</small>
       </div>
       <div id="timerContainer">
-        <button type="submit" class="btn btn-secondary">Convert to Coordinates & Retrieve Weather</button>
+        <button type="submit" class="btn btn-secondary">Retrieve Weather</button>
         <div id="timerLabel">Next Forecast Refresh:</div>
         <div id="refreshTimer">00:00:00</div>
       </div>
@@ -280,26 +283,28 @@
       if (!manualField.value && place) { manualField.value = place; }
     }
     
-    const locationDisplay = document.getElementById('locationDisplay');
-    locationDisplay.innerHTML = '<p>Attempting to retrieve your location...</p>';
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(function(position) {
-        const latitude = position.coords.latitude;
-        const longitude = position.coords.longitude;
-        const reverseUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1`;
-        fetch(reverseUrl)
-          .then(response => response.json())
-          .then(data => { setLocationDisplay(data, latitude, longitude); })
-          .catch(error => { locationDisplay.innerHTML = `<p>Your coordinates: Latitude: ${latitude.toFixed(4)}, Longitude: ${longitude.toFixed(4)}</p>`; });
-      }, function(error) { locationDisplay.innerHTML = `<p>Error getting location: ${error.message}</p>`; });
-    } else {
-      locationDisplay.innerHTML = '<p>Geolocation is not supported by this browser.</p>';
-    }
-    setTimeout(function() {
-      if (locationDisplay.innerHTML.includes("Attempting to retrieve your location")) {
-        locationDisplay.innerHTML = '<p>Automatic location retrieval is taking too long. Please use the manual input below.</p>';
+    // New function: triggered by the "Get Geolocation Automatically" button.
+    function getGeoLocation() {
+      const locationDisplay = document.getElementById('locationDisplay');
+      locationDisplay.innerHTML = '<p>Retrieving your location...</p>';
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+          const reverseUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1`;
+          fetch(reverseUrl)
+            .then(response => response.json())
+            .then(data => { setLocationDisplay(data, latitude, longitude); })
+            .catch(error => { locationDisplay.innerHTML = `<p>Your coordinates: Latitude: ${latitude.toFixed(4)}, Longitude: ${longitude.toFixed(4)}</p>`; });
+        }, function(error) { locationDisplay.innerHTML = `<p>Error getting location: ${error.message}</p>`; });
+      } else {
+        locationDisplay.innerHTML = '<p>Geolocation is not supported by this browser.</p>';
       }
-    }, 5000);
+    }
+    
+    // Remove auto geolocation on page load.
+    // Instead, attach event listener to the new button.
+    document.getElementById('getGeoBtn').addEventListener('click', getGeoLocation);
     
     // Manual location form
     document.getElementById('locationForm').addEventListener('submit', function(e) {
@@ -892,6 +897,12 @@
       if (document.visibilityState === 'visible' && screensaverToggle.checked && !wakeLock) {
         requestWakeLock();
       }
+    });
+    
+    // Add event listener for the "Update Plug Schedules" button so it updates the graph with the plug settings.
+    document.getElementById('updatePlugsBtn').addEventListener('click', function() {
+      updatePlugSchedules();
+      checkPlugStates();
     });
   </script>
 </body>
