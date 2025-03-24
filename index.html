@@ -195,6 +195,8 @@
     let weatherUvData = null;
     let globalLineTraces = [];
     let globalMergedLayout = null;
+    let lastWeatherUpdate = null;  // Track when weather was last updated.
+    let chartInitialized = false;  // To determine if chart was already drawn.
     
     // Timer: updates once per second to show time until next top-of-hour refresh
     function updateTimer() {
@@ -283,7 +285,7 @@
       if (!manualField.value && place) { manualField.value = place; }
     }
     
-    // New function: triggered by the "Get Geolocation Automatically" button.
+    // Triggered by the "Get Geolocation Automatically" button.
     function getGeoLocation() {
       const locationDisplay = document.getElementById('locationDisplay');
       locationDisplay.innerHTML = '<p>Retrieving your location...</p>';
@@ -301,9 +303,6 @@
         locationDisplay.innerHTML = '<p>Geolocation is not supported by this browser.</p>';
       }
     }
-    
-    // Remove auto geolocation on page load.
-    // Instead, attach event listener to the new button.
     document.getElementById('getGeoBtn').addEventListener('click', getGeoLocation);
     
     // Manual location form
@@ -329,6 +328,7 @@
                   weatherTimeData = weatherData.hourly.time;
                   weatherWindData = weatherData.hourly.wind_speed_80m;
                   weatherUvData = weatherData.hourly.uv_index;
+                  lastWeatherUpdate = new Date();
                   const traceWind = {
                     x: weatherTimeData,
                     y: weatherWindData,
@@ -418,7 +418,13 @@
                     margin: { l: 50, r: 100, t: 60, b: 70 }
                   };
                   
-                  Plotly.newPlot('mergedGraph', globalLineTraces, globalMergedLayout, { responsive: true });
+                  // Use react if chart was already initialized
+                  if (chartInitialized) {
+                    Plotly.react('mergedGraph', globalLineTraces, globalMergedLayout, { responsive: true });
+                  } else {
+                    Plotly.newPlot('mergedGraph', globalLineTraces, globalMergedLayout, { responsive: true });
+                    chartInitialized = true;
+                  }
                   updatePlugSchedules();
                   checkPlugStates();  // Immediately check plug state on weather update
                 } else {
@@ -796,73 +802,106 @@
       let selectedPlugTraces = scheduleType === "user" ? plugTraces : optimalPlugTraces;
       const allTraces = globalLineTraces.concat(selectedPlugTraces);
       globalMergedLayout.barmode = 'stack';
-      Plotly.newPlot('mergedGraph', allTraces, globalMergedLayout, { responsive: true });
+      if (chartInitialized) {
+        Plotly.react('mergedGraph', allTraces, globalMergedLayout, { responsive: true });
+      } else {
+        Plotly.newPlot('mergedGraph', allTraces, globalMergedLayout, { responsive: true });
+        chartInitialized = true;
+      }
     }
     
     /*********************************************
      * 7) CHECK PLUG STATES & TRIGGER WEBHOOKS   *
      *********************************************/
     function checkPlugStates() {
-      if (!weatherTimeData) return;
-      const now = new Date();
-      let currentIndex = 0;
-      let minDiff = Infinity;
-      weatherTimeData.forEach((t, i) => {
-        const diff = Math.abs(new Date(t) - now);
-        if (diff < minDiff) { minDiff = diff; currentIndex = i; }
-      });
-      const plugEntries = document.querySelectorAll('.plugEntry');
-      plugEntries.forEach((entry, idx) => {
-        const scheduleType = document.querySelector('input[name="scheduleType"]:checked').value;
-        const currentWeight = parseInt(document.getElementById('energySlider').value, 10) / 100;
-        const onHours = parseInt(entry.querySelector('.plugOnHours').value, 10);
-        const totalHours = parseInt(entry.querySelector('.plugTotalHours').value, 10);
-        const dayGroups = groupTimesByDay(weatherTimeData);
-        let schedule = [];
-        dayGroups.forEach(group => {
-          if (scheduleType === "user") {
-            schedule = schedule.concat(computePlugScheduleForDay(onHours, totalHours, group.times));
-          } else {
-            schedule = schedule.concat(computeOptimalPlugScheduleForDay(onHours, totalHours, group, currentWeight));
-          }
+      try {
+        if (!weatherTimeData) return;
+        const now = new Date();
+        let currentIndex = 0;
+        let minDiff = Infinity;
+        weatherTimeData.forEach((t, i) => {
+          const diff = Math.abs(new Date(t) - now);
+          if (diff < minDiff) { minDiff = diff; currentIndex = i; }
         });
-        schedule = applyForcedRules(entry, schedule);
-        // The plug's desired state is taken directly from the computed schedule for the current time index.
-        const desiredState = schedule[currentIndex] === 1;
-        let lastState = entry.dataset.state;
-        let newState = desiredState ? "on" : "off";
-        if (lastState !== newState) {
-          if (newState === "on") {
-            const webhook = entry.querySelector('.webhookOn').value;
-            if (webhook) { const img = new Image(); img.src = webhook; console.log("Triggered ON webhook for plug", idx, webhook); }
-          } else {
-            const webhook = entry.querySelector('.webhookOff').value;
-            if (webhook) { const img = new Image(); img.src = webhook; console.log("Triggered OFF webhook for plug", idx, webhook); }
+        const plugEntries = document.querySelectorAll('.plugEntry');
+        plugEntries.forEach((entry, idx) => {
+          const scheduleType = document.querySelector('input[name="scheduleType"]:checked').value;
+          const currentWeight = parseInt(document.getElementById('energySlider').value, 10) / 100;
+          const onHours = parseInt(entry.querySelector('.plugOnHours').value, 10);
+          const totalHours = parseInt(entry.querySelector('.plugTotalHours').value, 10);
+          const dayGroups = groupTimesByDay(weatherTimeData);
+          let schedule = [];
+          dayGroups.forEach(group => {
+            if (scheduleType === "user") {
+              schedule = schedule.concat(computePlugScheduleForDay(onHours, totalHours, group.times));
+            } else {
+              schedule = schedule.concat(computeOptimalPlugScheduleForDay(onHours, totalHours, group, currentWeight));
+            }
+          });
+          schedule = applyForcedRules(entry, schedule);
+          // The plug's desired state is taken directly from the computed schedule for the current time index.
+          const desiredState = schedule[currentIndex] === 1;
+          let lastState = entry.dataset.state;
+          let newState = desiredState ? "on" : "off";
+          if (lastState !== newState) {
+            if (newState === "on") {
+              const webhook = entry.querySelector('.webhookOn').value;
+              if (webhook) { const img = new Image(); img.src = webhook; console.log("Triggered ON webhook for plug", idx, webhook); }
+            } else {
+              const webhook = entry.querySelector('.webhookOff').value;
+              if (webhook) { const img = new Image(); img.src = webhook; console.log("Triggered OFF webhook for plug", idx, webhook); }
+            }
+            entry.dataset.state = newState;
+            const logEntry = { time: new Date().toLocaleTimeString(), state: newState.toUpperCase(), timestamp: new Date().getTime() };
+            if (!entry.historyLog) entry.historyLog = [];
+            entry.historyLog.push(logEntry);
+            if (entry.historyLog.length > 50) entry.historyLog.shift();
+            updateHistoryTable(entry);
           }
-          entry.dataset.state = newState;
-          const logEntry = { time: new Date().toLocaleTimeString(), state: newState.toUpperCase(), timestamp: new Date().getTime() };
-          if (!entry.historyLog) entry.historyLog = [];
-          entry.historyLog.push(logEntry);
-          if (entry.historyLog.length > 50) entry.historyLog.shift();
-          updateHistoryTable(entry);
-        }
-        let statusIndicator = entry.querySelector('.plugStatus');
-        if (statusIndicator) { statusIndicator.innerText = "Status: " + newState.toUpperCase(); }
-      });
+          let statusIndicator = entry.querySelector('.plugStatus');
+          if (statusIndicator) { statusIndicator.innerText = "Status: " + newState.toUpperCase(); }
+        });
+      } catch (error) {
+        console.error("Error in checkPlugStates:", error);
+      }
     }
     
     /************************************************************
      * 8) PERIODIC CHECK FOR WEBHOOK TRIGGERS & HISTORY UPDATE   *
      ************************************************************/
-    setInterval(function() { checkPlugStates(); }, 60000);
-    
+    setInterval(function() { 
+      try {
+        checkPlugStates(); 
+      } catch (error) {
+        console.error("Error in periodic plug state check:", error);
+      }
+    }, 10000);  // every 10 seconds
+
     /*********************************************
      * 9) HOURLY WEATHER REFRESH (TOP OF THE HOUR) *
      *********************************************/
     function refreshWeather() {
       document.getElementById("locationForm").dispatchEvent(new Event('submit'));
     }
-    setInterval(refreshWeather, 3600000);
+    setInterval(function(){
+      try {
+        refreshWeather();
+      } catch (error) {
+        console.error("Error in hourly weather refresh:", error);
+      }
+    }, 3600000);
+    
+    // Safety check: every minute, if weather data is older than 55 minutes, refresh it.
+    setInterval(function() {
+      try {
+        if (lastWeatherUpdate && (new Date() - lastWeatherUpdate > 55 * 60 * 1000)) {
+          console.log("Weather data outdated. Refreshing...");
+          refreshWeather();
+        }
+      } catch (error) {
+        console.error("Error in weather safety check:", error);
+      }
+    }, 60000);
     
     /****************************************************
      * 10) PREVENT SCREENSAVER: Wake Lock Toggle Feature   *
@@ -899,11 +938,20 @@
       }
     });
     
-    // Add event listener for the "Update Plug Schedules" button so it updates the graph with the plug settings.
+    // "Update Plug Schedules" button handler
     document.getElementById('updatePlugsBtn').addEventListener('click', function() {
       updatePlugSchedules();
       checkPlugStates();
     });
+    
+    // Global error handler: reload the page after 5 seconds if an unhandled error occurs.
+    window.onerror = function(message, source, lineno, colno, error) {
+      console.error("Global error caught:", message, source, lineno, colno, error);
+      setTimeout(function() {
+        location.reload();
+      }, 5000);
+      return false;
+    };
   </script>
 </body>
 </html>
