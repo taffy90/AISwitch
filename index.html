@@ -22,16 +22,16 @@
     .container {
       margin-top: 20px;
     }
-    /* Description section styling */
-    #descriptionSection {
-      padding: 20px;
-      border: 1px solid #444;
-      border-radius: 5px;
-      background: #2a2a2a;
-      margin-bottom: 20px;
+    /* Collapsible Overview Sections */
+    .overview-button {
+      margin-bottom: 10px;
     }
-    #descriptionSection h2 {
-      margin-top: 0;
+    .overview-card {
+      background-color: #333;
+      color: #fff;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
     }
     /* Forecast and Smart Plug Settings take full width */
     #forecastSection, #smartPlugSettingsSection {
@@ -119,28 +119,48 @@
 </head>
 <body>
   <div class="container">
-    <!-- Description Section -->
-    <div id="descriptionSection">
-      <h2>Dashboard Overview</h2>
-      <p>This dashboard is a comprehensive, real-time control center designed to seamlessly integrate weather forecasting with smart plug scheduling. Key features include:</p>
-      <ul>
-        <li>
-          <strong>Real-Time Weather Forecasting:</strong>
-          <p>Fetches weather data (such as wind speed at 80 m and Sun radiation) using your current or manually entered location (with support for automatic geolocation). It computes a renewable energy quality score by balancing solar and wind energy inputs, displayed on an interactive Plotly graph.</p>
-        </li>
-        <li>
-          <strong>Smart Plug Scheduling &amp; Control:</strong>
-          <p>Allows you to configure smart plugs with custom on/off schedules based on user-planned or weather-optimized settings. You can set parameters like on-hours, total hours per cycle, power consumption (kWh), and define forced on/off rules for specific days and times. Webhooks are triggered automatically to update the plug status according to the computed schedule.</p>
-        </li>
-        <li>
-          <strong>Dynamic Updates &amp; Continuous Operation:</strong>
-          <p>The dashboard is built to run continuously, with self-refreshing weather forecasts, graph updates, and plug schedule checks to ensure your system stays synchronized—even over long periods.</p>
-        </li>
-        <li>
-          <strong>Additional Utilities:</strong>
-          <p>Features an energy slider to adjust the balance between solar and wind energy inputs and this software can technically run many known brand smart plugs available for consumers and companies.</p>
-        </li>
-      </ul>
+    <!-- Overview Sections -->
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <button class="btn btn-info btn-block overview-button" type="button" data-toggle="collapse" data-target="#dashboardOverview" aria-expanded="false" aria-controls="dashboardOverview">
+          Dashboard Overview
+        </button>
+        <div class="collapse" id="dashboardOverview">
+          <div class="overview-card">
+            <h5>Dashboard Overview</h5>
+            <p>
+              This dashboard is a comprehensive, real-time control center designed to seamlessly integrate weather forecasting with smart plug scheduling. Key features include:
+            </p>
+            <ul>
+              <li>
+                <strong>Real-Time Weather Forecasting:</strong> Fetches weather data (such as wind speed at 80 m and Sun radiation) using your current or manually entered location (with support for automatic geolocation). It computes a renewable energy quality score by balancing solar and wind energy inputs, displayed on an interactive Plotly graph.
+              </li>
+              <li>
+                <strong>Smart Plug Scheduling & Control:</strong> Allows you to configure smart plugs with custom on/off schedules based on user-planned or weather-optimized settings. You can set parameters like on-hours, total hours per cycle, power consumption (kWh), and define forced on/off rules for specific days and times. Webhooks are triggered automatically to update the plug status.
+              </li>
+              <li>
+                <strong>Dynamic Updates & Continuous Operation:</strong> The dashboard runs continuously with self-refreshing weather forecasts, graph updates, and plug schedule checks.
+              </li>
+              <li>
+                <strong>Additional Utilities:</strong> Features an energy slider to adjust the balance between solar (Sun radiation) and wind energy inputs and supports many popular smart plug brands.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <button class="btn btn-info btn-block overview-button" type="button" data-toggle="collapse" data-target="#profitOverview" aria-expanded="false" aria-controls="profitOverview">
+          Profit Overview
+        </button>
+        <div class="collapse" id="profitOverview">
+          <div class="overview-card">
+            <h5>Profit Overview</h5>
+            <p>
+              Using optimized scheduling, your device energy usage is shifted to the hours with the best renewable energy availability. For example, if a plug is set to be on for 1 hour per day with a 1.5 kWh device, then the scheduled “on” hour is shifted from your chosen time to the hour with the highest renewable energy. Over a multi-day forecast, the script calculates the differences between the user-planned and optimized schedules and shows how many kWh are effectively rescheduled.
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
     
     <!-- Top Controls: Save/Load Settings and Prevent Screensaver Toggle -->
@@ -196,20 +216,33 @@
     <!-- Smart Plug Settings Section -->
     <div id="smartPlugSettingsSection" class="mt-5">
       <h3>Smart Plug Settings</h3>
-      <!-- Schedule Type at the very top -->
-      <div class="form-group">
-        <label>Schedule Type:</label>
-        <div class="form-check">
-          <input class="form-check-input" type="radio" name="scheduleType" id="userPlanned" value="user" checked>
-          <label class="form-check-label" for="userPlanned">User Planned</label>
+      <!-- Schedule Type Section with Infographic -->
+      <div class="row">
+        <div class="col-md-6">
+          <label>Schedule Type:</label>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="scheduleType" id="userPlanned" value="user" checked>
+            <label class="form-check-label" for="userPlanned">User Planned</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="scheduleType" id="optimized" value="optimized">
+            <label class="form-check-label" for="optimized">Optimized (Weather-based)</label>
+          </div>
         </div>
-        <div class="form-check">
-          <input class="form-check-input" type="radio" name="scheduleType" id="optimized" value="optimized">
-          <label class="form-check-label" for="optimized">Optimized (Weather-based)</label>
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Schedule Profit Infographic</h5>
+              <div id="profitInfographicValue">
+                <p>Calculating rescheduled energy…</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+      
       <!-- Plug Settings Panel -->
-      <div id="plugSchedulePanel">
+      <div id="plugSchedulePanel" class="mt-3">
         <div id="plugList"></div>
         <button type="button" class="btn btn-outline-secondary mb-2" id="addPlugBtn">Add Plug</button>
         <small class="form-text mb-2">Click "Add Plug" to add a new smart plug. Fill in the details below for each plug.</small>
@@ -362,7 +395,7 @@
                 if (weatherData && weatherData.hourly && weatherData.hourly.time) {
                   weatherTimeData = weatherData.hourly.time;
                   weatherWindData = weatherData.hourly.wind_speed_80m;
-                  weatherUvData = weatherData.hourly.uv_index;  // Data for sun radiation
+                  weatherUvData = weatherData.hourly.uv_index;
                   lastWeatherUpdate = new Date();
                   const traceWind = {
                     x: weatherTimeData,
@@ -453,7 +486,6 @@
                     margin: { l: 50, r: 100, t: 60, b: 70 }
                   };
                   
-                  // Update chart using Plotly.react if already initialized.
                   if (chartInitialized) {
                     Plotly.react('mergedGraph', globalLineTraces, globalMergedLayout, { responsive: true });
                   } else {
@@ -461,7 +493,8 @@
                     chartInitialized = true;
                   }
                   updatePlugSchedules();
-                  checkPlugStates();  // Immediately check plug state on weather update
+                  checkPlugStates();
+                  updateProfitInfographic();
                 } else {
                   document.getElementById('mergedGraph').innerHTML = '<p>No weather data available for the selected period.</p>';
                 }
@@ -488,14 +521,16 @@
       if (document.querySelector('input[name="scheduleType"]:checked').value === "optimized") {
         updatePlugSchedules();
         checkPlugStates();
+        updateProfitInfographic();
       }
     });
     
-    // When schedule type changes, update the graph and immediately check plug states
+    // When schedule type changes, update the graph, plug states, and profit infographic
     document.querySelectorAll('input[name="scheduleType"]').forEach(radio => {
       radio.addEventListener('change', function() {
         updatePlugSchedules();
         checkPlugStates();
+        updateProfitInfographic();
       });
     });
     
@@ -845,6 +880,40 @@
       }
     }
     
+    // Update profit infographic by comparing the user-planned schedule vs. the optimized schedule for the complete forecast period.
+    function updateProfitInfographic() {
+      if (!weatherTimeData) return;
+      const dayGroups = groupTimesByDay(weatherTimeData);
+      let totalRescheduledEnergy = 0;
+      const plugEntries = document.querySelectorAll('.plugEntry');
+      // Loop through each plug and each day group
+      plugEntries.forEach(entry => {
+        const kwh = parseFloat(entry.querySelector('.plugKwh').value);
+        const onHours = parseInt(entry.querySelector('.plugOnHours').value, 10);
+        const totalHours = parseInt(entry.querySelector('.plugTotalHours').value, 10);
+        let plugRescheduled = 0;
+        // For each day, compute the user-planned and optimized schedules.
+        dayGroups.forEach(group => {
+          const userSched = computePlugScheduleForDay(onHours, totalHours, group.times);
+          const optSched = computeOptimalPlugScheduleForDay(onHours, totalHours, group, parseInt(document.getElementById('energySlider').value, 10) / 100);
+          const userFinal = applyForcedRules(entry, userSched);
+          const optFinal = applyForcedRules(entry, optSched);
+          let diffCount = 0;
+          for (let i = 0; i < userFinal.length; i++) {
+            if (userFinal[i] !== optFinal[i]) diffCount++;
+          }
+          // Since a single shift causes two differences, effective hours difference is diffCount/2.
+          plugRescheduled += (diffCount / 2) * kwh;
+        });
+        totalRescheduledEnergy += plugRescheduled;
+      });
+      const profitDiv = document.getElementById('profitInfographicValue');
+      profitDiv.innerHTML = `
+        <h5>Rescheduled Energy Usage</h5>
+        <p><strong>Total Rescheduled Energy:</strong> ${totalRescheduledEnergy.toFixed(2)} kWh</p>
+      `;
+    }
+    
     /*********************************************
      * 7) CHECK PLUG STATES & TRIGGER WEBHOOKS   *
      *********************************************/
@@ -874,7 +943,6 @@
             }
           });
           schedule = applyForcedRules(entry, schedule);
-          // The plug's desired state is taken directly from the computed schedule for the current time index.
           const desiredState = schedule[currentIndex] === 1;
           let lastState = entry.dataset.state;
           let newState = desiredState ? "on" : "off";
@@ -977,6 +1045,7 @@
     document.getElementById('updatePlugsBtn').addEventListener('click', function() {
       updatePlugSchedules();
       checkPlugStates();
+      updateProfitInfographic();
     });
     
     // Global error handler: reload the page after 5 seconds if an unhandled error occurs.
