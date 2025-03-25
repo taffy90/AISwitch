@@ -119,7 +119,7 @@
 </head>
 <body>
   <div class="container">
-    <!-- Overview Sections -->
+    <!-- First Row: Dashboard and Profit Overview -->
     <div class="row mb-3">
       <div class="col-md-6">
         <button class="btn btn-info btn-block overview-button" type="button" data-toggle="collapse" data-target="#dashboardOverview" aria-expanded="false" aria-controls="dashboardOverview">
@@ -132,18 +132,10 @@
               This dashboard is a comprehensive, real-time control center designed to seamlessly integrate weather forecasting with smart plug scheduling. Key features include:
             </p>
             <ul>
-              <li>
-                <strong>Real-Time Weather Forecasting:</strong> Fetches weather data (such as wind speed at 80 m and Sun radiation) using your current or manually entered location (with support for automatic geolocation). It computes a renewable energy quality score by balancing solar and wind energy inputs, displayed on an interactive Plotly graph.
-              </li>
-              <li>
-                <strong>Smart Plug Scheduling & Control:</strong> Allows you to configure smart plugs with custom on/off schedules based on user-planned or weather-optimized settings. You can set parameters like on-hours, total hours per cycle, power consumption (kWh), and define forced on/off rules for specific days and times. Webhooks are triggered automatically to update the plug status.
-              </li>
-              <li>
-                <strong>Dynamic Updates & Continuous Operation:</strong> The dashboard runs continuously with self-refreshing weather forecasts, graph updates, and plug schedule checks.
-              </li>
-              <li>
-                <strong>Additional Utilities:</strong> Features an energy slider to adjust the balance between solar (Sun radiation) and wind energy inputs and supports many popular smart plug brands.
-              </li>
+              <li><strong>Real-Time Weather Forecasting:</strong> Fetches weather data (such as wind speed at 80 m and Sun radiation) using your current or manually entered location (with support for automatic geolocation). It computes a renewable energy quality score by balancing solar and wind energy inputs, displayed on an interactive Plotly graph.</li>
+              <li><strong>Smart Plug Scheduling & Control:</strong> Configure smart plugs with custom on/off schedules based on user-planned or weather-optimized settings. Set parameters like on-hours, total cycle hours, device power (kWh), and forced on/off rules. Webhooks update plug status automatically.</li>
+              <li><strong>Dynamic Updates & Continuous Operation:</strong> The dashboard runs continuously with self-refreshing weather forecasts, graph updates, and plug schedule checks.</li>
+              <li><strong>Additional Utilities:</strong> Use an energy slider to adjust the balance between solar (Sun radiation) and wind energy inputs and connect many popular smart plug brands.</li>
             </ul>
           </div>
         </div>
@@ -156,14 +148,67 @@
           <div class="overview-card">
             <h5>Profit Overview</h5>
             <p>
-              Using optimized scheduling, your device energy usage is shifted to the hours with the best renewable energy availability. For example, if a plug is set to be on for 1 hour per day with a 1.5 kWh device, then the scheduled “on” hour is shifted from your chosen time to the hour with the highest renewable energy. Over a multi-day forecast, the script calculates the differences between the user-planned and optimized schedules and shows how many kWh are effectively rescheduled.
+              Using optimized scheduling, your device energy usage is shifted to the hours with the best renewable energy availability. The script compares your user-planned schedule with the optimized (weather-based) schedule over the complete forecast period to determine how many kWh are rescheduled. This helps lower energy costs, reduce fossil fuel use, and deliver environmental benefits.
             </p>
           </div>
         </div>
       </div>
     </div>
     
-    <!-- Top Controls: Save/Load Settings and Prevent Screensaver Toggle -->
+    <!-- Second Row: Recommended Devices and Usage Guide -->
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <button class="btn btn-info btn-block overview-button" type="button" data-toggle="collapse" data-target="#recommendedDevices" aria-expanded="false" aria-controls="recommendedDevices">
+          Recommended Devices
+        </button>
+        <div class="collapse" id="recommendedDevices">
+          <div class="overview-card">
+            <h5>Recommended Devices</h5>
+            <p>These devices are ideal candidates for weather-based smart plugs, as they do not need to be on 100% of the time:</p>
+            <ul>
+              <li>Standard Air Conditioners</li>
+              <li>Home Battery Systems</li>
+              <li>Electric Vehicle Chargers</li>
+              <li>Refrigerators/Freezers</li>
+              <li>Water Heaters</li>
+              <li>Sump Pumps</li>
+              <li>Hot Tubs/Spas</li>
+              <li>Heated Floors</li>
+              <li>Air Purifiers</li>
+              <li>Dehumidifiers/Humidifiers</li>
+              <li>Electric Space Heaters</li>
+              <li>Fans</li>
+              <li>Fish Tank Heaters, Pumps and Filters</li>
+              <li>Industrial Equipment</li>
+              <li>Electric Water Pumps</li>
+              <li>Irrigation Systems</li>
+              <li>Pool Pumps</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <button class="btn btn-info btn-block overview-button" type="button" data-toggle="collapse" data-target="#usageGuide" aria-expanded="false" aria-controls="usageGuide">
+          Usage Guide
+        </button>
+        <div class="collapse" id="usageGuide">
+          <div class="overview-card">
+            <h5>Usage Guide</h5>
+            <ol>
+              <li><strong>Set Your Location:</strong> Use automatic geolocation or enter your village/city manually to fetch weather data.</li>
+              <li><strong>Retrieve Weather:</strong> Click "Retrieve Weather" to update the forecast and initialize the dashboard.</li>
+              <li><strong>Adjust the Energy Slider:</strong> Choose your desired balance between Sun radiation and wind energy.</li>
+              <li><strong>Configure Smart Plug Settings:</strong> Set on-hours, total cycle hours, device power (kWh), and webhooks for each plug. Optionally, add forced rules.</li>
+              <li><strong>Select a Schedule Type:</strong> Choose between User Planned and Optimized (Weather-based) schedules. The optimized option shifts the "on" hour to maximize renewable energy usage.</li>
+              <li><strong>Review the Profit Forecast:</strong> See the dynamic "Profit forecast" that shows the total rescheduled energy (in kWh) over the forecast period.</li>
+              <li><strong>Save/Load Settings:</strong> Use the buttons to save your configuration or load a previous one.</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Top Controls (Repeat if needed) -->
     <div id="settingsButtons" class="mb-3 d-flex justify-content-between align-items-center">
       <div>
         <button type="button" class="btn btn-success" id="saveSettingsBtn">Save Settings</button>
@@ -215,8 +260,8 @@
     
     <!-- Smart Plug Settings Section -->
     <div id="smartPlugSettingsSection" class="mt-5">
-      <h3>Smart Plug Settings</h3>
-      <!-- Schedule Type Section with Infographic -->
+      <h3 class="text-center">Smart Plug Settings</h3>
+      <!-- Schedule Type Section with Profit Forecast -->
       <div class="row">
         <div class="col-md-6">
           <label>Schedule Type:</label>
@@ -230,11 +275,11 @@
           </div>
         </div>
         <div class="col-md-6">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Schedule Profit Infographic</h5>
+          <div class="card bg-dark text-white">
+            <div class="card-body text-center">
+              <h5 class="card-title">Profit forecast</h5>
               <div id="profitInfographicValue">
-                <p>Calculating rescheduled energy…</p>
+                <p>Profit forecast: 0.00 kWh</p>
               </div>
             </div>
           </div>
@@ -880,20 +925,20 @@
       }
     }
     
-    // Update profit infographic by comparing the user-planned schedule vs. the optimized schedule for the complete forecast period.
+    // Update profit infographic by comparing user-planned vs. optimized schedules over the complete forecast period.
     function updateProfitInfographic() {
       if (!weatherTimeData) return;
       const dayGroups = groupTimesByDay(weatherTimeData);
       let totalRescheduledEnergy = 0;
       const plugEntries = document.querySelectorAll('.plugEntry');
-      // Loop through each plug and each day group
+      // For each plug, iterate over each day
       plugEntries.forEach(entry => {
         const kwh = parseFloat(entry.querySelector('.plugKwh').value);
         const onHours = parseInt(entry.querySelector('.plugOnHours').value, 10);
         const totalHours = parseInt(entry.querySelector('.plugTotalHours').value, 10);
         let plugRescheduled = 0;
-        // For each day, compute the user-planned and optimized schedules.
         dayGroups.forEach(group => {
+          // Compute user-planned and optimized schedules for this day.
           const userSched = computePlugScheduleForDay(onHours, totalHours, group.times);
           const optSched = computeOptimalPlugScheduleForDay(onHours, totalHours, group, parseInt(document.getElementById('energySlider').value, 10) / 100);
           const userFinal = applyForcedRules(entry, userSched);
@@ -902,16 +947,13 @@
           for (let i = 0; i < userFinal.length; i++) {
             if (userFinal[i] !== optFinal[i]) diffCount++;
           }
-          // Since a single shift causes two differences, effective hours difference is diffCount/2.
+          // A single shift changes two slots, so effective difference = diffCount / 2.
           plugRescheduled += (diffCount / 2) * kwh;
         });
         totalRescheduledEnergy += plugRescheduled;
       });
       const profitDiv = document.getElementById('profitInfographicValue');
-      profitDiv.innerHTML = `
-        <h5>Rescheduled Energy Usage</h5>
-        <p><strong>Total Rescheduled Energy:</strong> ${totalRescheduledEnergy.toFixed(2)} kWh</p>
-      `;
+      profitDiv.innerHTML = `<p>Profit forecast: ${totalRescheduledEnergy.toFixed(2)} kWh</p>`;
     }
     
     /*********************************************
