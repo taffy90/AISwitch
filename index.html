@@ -1,14 +1,15 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>Website Switcher - Airplane Dashboard</title>
-  <!-- Bootstrap CSS -->
+  <!-- Import Bootstrap CSS for styling and collapse functionality -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <!-- Orbitron Font -->
+  <!-- Import Orbitron font for a futuristic look -->
   <link href="https://fonts.googleapis.com/css?family=Orbitron&display=swap" rel="stylesheet">
-  <!-- Plotly Library -->
+  <!-- Import Plotly for interactive graphs -->
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
   <style>
     body {
@@ -135,7 +136,7 @@
               <li><strong>Real-Time Weather Forecasting:</strong> Fetches weather data (such as wind speed at 80 m and Sun radiation) using your current or manually entered location. It computes a renewable energy quality score by balancing solar and wind energy inputs, displayed on an interactive Plotly graph.</li>
               <li><strong>Smart Plug Scheduling & Control:</strong> Configure smart plugs with custom on/off schedules based on user-planned or weather-optimized settings. Set parameters like on-hours, total cycle hours, device power (kWh), and forced on/off rules. Webhooks update plug status automatically.</li>
               <li><strong>Dynamic Updates & Continuous Operation:</strong> The dashboard runs continuously with self-refreshing weather forecasts, graph updates, and plug schedule checks.</li>
-              <li><strong>Additional Utilities:</strong> Use an energy slider to adjust the balance between solar power and wind energy importance – tailor this if your area has more solar panels or wind turbines.</li>
+              <li><strong>Additional Utilities:</strong> Use an energy slider to adjust the balance between solar power and wind energy importance, probably your area has either more solar panels or wind turbines.</li>
             </ul>
           </div>
         </div>
@@ -148,14 +149,14 @@
           <div class="overview-card">
             <h5>Your Profits</h5>
             <p>
-              Using optimized scheduling, your device energy usage is shifted to the hours with the best renewable energy availability. This script compares your user-planned schedule with the optimized (weather-based) schedule over the complete forecast period to determine how many kWh can be rescheduled. This helps lower energy costs, reduce fossil fuel use, and improve grid efficiency.
+              Using optimized scheduling, your device energy usage is shifted to the hours with the best renewable energy availability. This script compares your user-planned schedule with the optimized (weather-based) schedule over the complete forecast period to determine how many kWh can be rescheduled. This helps lower energy costs, reduce fossil fuel use, help make the energy grid more efficient.
             </p>
           </div>
         </div>
       </div>
     </div>
     
-    <!-- Second Row: Recommended Devices and User Guide -->
+    <!-- Second Row: Recommended Devices and Usage Guide -->
     <div class="row mb-3">
       <div class="col-md-6">
         <button class="btn btn-info btn-block overview-button" data-toggle="collapse" data-target="#recommendedDevices" aria-expanded="false" aria-controls="recommendedDevices" title="Click to view a list of devices that are ideal for weather-based smart plugs.">
@@ -195,11 +196,11 @@
           <div class="overview-card">
             <h5>User Guide</h5>
             <ol>
-              <li><strong>Set Your Location:</strong> Use automatic geolocation or enter your village/city manually (pre-filled as Amsterdam) to fetch weather data.</li>
+              <li><strong>Set Your Location:</strong> Use automatic geolocation or enter your village/city manually to fetch weather data.</li>
               <li><strong>Click Retrieve Weather:</strong> Click "Retrieve Weather" to update the forecast and initialize the dashboard.</li>
-              <li><strong>Adjust the Energy Slider:</strong> Choose your desired balance between solar power and wind energy.</li>
-              <li><strong>Add your smart plug:</strong> The page comes prefilled with an example plug. You can add or edit plug settings (on-hours, total cycle hours, device power in kWh, etc.).</li>
-              <li><strong>Select a Schedule Type:</strong> The default is set to Optimized (Weather-based). This shifts the "on" hour to maximize renewable energy usage.</li>
+              <li><strong>Adjust the Energy Slider:</strong> Choose your desired balance between solar power and wind energy. Choose wisely if your area has more solar panels or more wind turbines.</li>
+              <li><strong>Add your smart plug:</strong> Set on-hours, total cycle hours, device power (kWh), and webhooks for each plug. Optionally, add forced rules.</li>
+              <li><strong>Select a Schedule Type:</strong> Choose between User Planned and Optimized (Weather-based) schedules. The optimized option shifts the "on" hour to maximize renewable energy usage.</li>
               <li><strong>Review Your Profit Forecast:</strong> See the dynamic "Profit forecast" showing the total rescheduled energy over the forecast period.</li>
               <li><strong>Save/Load Settings:</strong> Use the buttons to save your configuration or load a previous one.</li>
             </ol>
@@ -208,7 +209,7 @@
       </div>
     </div>
     
-    <!-- Top Controls: Save/Load and Prevent Screensaver -->
+    <!-- Top Controls (Repeat if needed) -->
     <div id="settingsButtons" class="mb-3 d-flex justify-content-between align-items-center">
       <div>
         <button class="btn btn-success" id="saveSettingsBtn" data-toggle="tooltip" title="Save your current configuration.">Save Settings</button>
@@ -220,19 +221,19 @@
       </div>
     </div>
     
-    <!-- Location Display -->
+    <!-- Automatic Geolocation Display -->
     <div id="locationDisplay" class="mt-3" data-toggle="tooltip" title="This area displays your current location information.">
       <p>Location will appear here when retrieved.</p>
     </div>
     
-    <!-- Get Geolocation Button -->
+    <!-- New Button to get Geolocation Automatically -->
     <button id="getGeoBtn" class="btn btn-primary mb-3" data-toggle="tooltip" title="Click to automatically retrieve your location.">Get Geolocation Automatically</button>
     
-    <!-- Manual Location Input -->
+    <!-- Manual Location Input with Timer -->
     <h2 class="mt-5" data-toggle="tooltip" title="Enter your village or city to get the weather forecast.">Enter Location Manually</h2>
     <form id="locationForm">
       <div class="form-group">
-        <input type="text" class="form-control" id="manualLocation" placeholder="Enter village or city name" required data-toggle="tooltip" title="Type your village or city name here." value="Amsterdam">
+        <input type="text" class="form-control" id="manualLocation" placeholder="Enter village or city name" required data-toggle="tooltip" title="Type your village or city name here.">
         <small class="form-text" data-toggle="tooltip" title="Your village or city name will be used to fetch weather data.">Type the name of your village or city to fetch coordinates and weather.</small>
       </div>
       <div id="timerContainer">
@@ -246,28 +247,31 @@
     <!-- Forecast Section -->
     <div id="forecastSection" class="mt-5">
       <h3 data-toggle="tooltip" title="This section displays the weather forecast and renewable energy quality.">Weather & Renewable Energy Forecast</h3>
+      <!-- Slider for renewable energy weight -->
       <div class="form-group">
-        <label for="energySlider" data-toggle="tooltip" title="Adjust the slider to balance the availability of solar panels vs. wind turbines in your area.">
+        <label for="energySlider" data-toggle="tooltip" title="Adjust the slider to balance the availability of either solar panels or wind turbines in your area.">
           My area has: <span id="sunWeightLabel">50</span>% Solar Panels / <span id="windWeightLabel">50</span>% Wind Turbines
         </label>
         <input type="range" class="form-control-range" id="energySlider" min="0" max="100" value="50" data-toggle="tooltip" title="Slide to adjust the relative availability of either solar panels or wind turbines around your location.">
         <small class="form-text" data-toggle="tooltip" title="Adjusting this slider updates the renewable energy quality calculation.">Adjust the slider to set the weighting between solar panel availability vs wind turbines.</small>
       </div>
+      <!-- Merged Graph Container -->
       <div id="mergedGraph" data-toggle="tooltip" title="Interactive graph showing weather forecast, renewable energy quality, and plug schedules."></div>
     </div>
     
     <!-- Smart Plug Settings Section -->
     <div id="smartPlugSettingsSection" class="mt-5">
       <h3 class="text-center" data-toggle="tooltip" title="Configure your smart plug settings below.">Smart Plug Settings</h3>
+      <!-- Schedule Type Section with Profit Forecast -->
       <div class="row">
         <div class="col-md-6">
           <label data-toggle="tooltip" title="Select your preferred scheduling method.">Schedule Type:</label>
           <div class="form-check">
-            <input class="form-check-input" type="radio" name="scheduleType" id="userPlanned" value="user" data-toggle="tooltip" title="User Planned: Your plug will be on at the times you specified.">
+            <input class="form-check-input" type="radio" name="scheduleType" id="userPlanned" value="user" checked data-toggle="tooltip" title="User Planned: Your plug will be on at the times you specified.">
             <label class="form-check-label" for="userPlanned">User Planned</label>
           </div>
           <div class="form-check">
-            <input class="form-check-input" type="radio" name="scheduleType" id="optimized" value="optimized" checked data-toggle="tooltip" title="Optimized (Weather-based): The plug's on-hour is shifted to the most renewable hour.">
+            <input class="form-check-input" type="radio" name="scheduleType" id="optimized" value="optimized" data-toggle="tooltip" title="Optimized (Weather-based): The plug's on-hour is shifted to the most renewable hour.">
             <label class="form-check-label" for="optimized">Optimized (Weather-based)</label>
           </div>
         </div>
@@ -275,14 +279,16 @@
           <div class="card bg-dark text-white">
             <div class="card-body text-center">
               <h5 class="card-title" data-toggle="tooltip" title="This forecast shows the total energy (in kWh) that has been rescheduled to renewables over the forecast period.">The Profit Forecast</h5>
-              <div id="profitInfographicValue" data-toggle="tooltip" title="This forecast updates dynamically as your plug schedules change.">
-                <p>0.00 kWh</p>
+              <div id="profitInfographicValue" data-toggle="tooltip" title="This forecast shows the total energy (in kWh) that has been rescheduled to renewables over the forecast period.">
+                <p>      0.00 kWh</p>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div id="plugSchedulePanel" data-toggle="tooltip" title="Configure each smart plug's settings below.">
+      
+      <!-- Plug Settings Panel -->
+      <div id="plugSchedulePanel" class="mt-3" data-toggle="tooltip" title="Configure each smart plug's settings below.">
         <div id="plugList"></div>
         <button type="button" class="btn btn-outline-secondary mb-2" id="addPlugBtn" data-toggle="tooltip" title="Click to add a new smart plug configuration.">Add Plug</button>
         <small class="form-text mb-2" data-toggle="tooltip" title="Click 'Add Plug' and then fill in the details for each plug.">Click "Add Plug" to add a new smart plug. Fill in the details below for each plug.</small>
@@ -291,7 +297,7 @@
     </div>
   </div>
   
-  <!-- jQuery and Bootstrap JS -->
+  <!-- Import jQuery (Slim version) and Bootstrap JS for collapse functionality -->
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
   <script>
@@ -299,7 +305,7 @@
     $(function () {
       $('[data-toggle="tooltip"]').tooltip();
     });
-    
+
     /*************************************
      * 1) GLOBAL VARIABLES & TIMER SETUP *
      *************************************/
@@ -308,10 +314,10 @@
     let weatherUvData = null;
     let globalLineTraces = [];
     let globalMergedLayout = null;
-    let lastWeatherUpdate = null;
-    let chartInitialized = false;
+    let lastWeatherUpdate = null;  // Track when weather was last updated.
+    let chartInitialized = false;  // To determine if chart was already drawn.
     
-    // Timer: updates every second to show time until next forecast refresh
+    // Timer: updates once per second to show time until next top-of-hour refresh
     function updateTimer() {
       const now = new Date();
       const nextHour = new Date(now);
@@ -327,8 +333,8 @@
         (seconds < 10 ? "0" + seconds : seconds);
     }
     setInterval(updateTimer, 1000);
-    updateTimer();
-    
+    updateTimer(); // Initial call
+
     /**************************************
      * 2) SAVE/LOAD SETTINGS FROM STORAGE *
      **************************************/
@@ -398,6 +404,7 @@
       if (!manualField.value && place) { manualField.value = place; }
     }
     
+    // Triggered by the "Get Geolocation Automatically" button.
     function getGeoLocation() {
       const locationDisplay = document.getElementById('locationDisplay');
       locationDisplay.innerHTML = '<p>Retrieving your location...</p>';
@@ -416,16 +423,6 @@
       }
     }
     document.getElementById('getGeoBtn').addEventListener('click', getGeoLocation);
-    
-    // When the Auto Geo checkbox is enabled, trigger geolocation and wake lock.
-    document.getElementById('autoGeoPrevent').addEventListener('change', function() {
-      if (this.checked) {
-        getGeoLocation();
-        requestWakeLock();
-      } else {
-        releaseWakeLock();
-      }
-    });
     
     // Manual location form
     document.getElementById('locationForm').addEventListener('submit', function(e) {
@@ -579,7 +576,7 @@
       }
     });
     
-    // When schedule type changes, update the graph, plug states, and profit infographic.
+    // When schedule type changes, update the graph, plug states, and profit infographic
     document.querySelectorAll('input[name="scheduleType"]').forEach(radio => {
       radio.addEventListener('change', function() {
         updatePlugSchedules();
@@ -588,7 +585,7 @@
       });
     });
     
-    // Helper: group forecast times by day.
+    // Helper: group forecast times by day
     function groupTimesByDay(timeData) {
       const groups = {};
       timeData.forEach((t, i) => {
@@ -601,7 +598,7 @@
       return sortedDates.map(date => groups[date]);
     }
     
-    // Uniform schedule for a single day.
+    // Uniform schedule for a single day
     function computePlugScheduleForDay(onHours, totalHours, dayTimes) {
       const dayLength = dayTimes.length;
       function computeCycle(onHours, totalHours) {
@@ -626,7 +623,7 @@
       return schedule;
     }
     
-    // Optimized schedule for a single day.
+    // Optimized schedule for a single day
     function computeOptimalPlugScheduleForDay(onHours, totalHours, dayGroup, weight) {
       const dayTimes = dayGroup.times;
       const indices = dayGroup.indices;
@@ -655,7 +652,7 @@
       return schedule;
     }
     
-    // Apply forced schedule rules to override computed schedule.
+    // Apply forced schedule rules to override computed schedule
     function applyForcedRules(entry, schedule) {
       const forcedRules = entry.querySelectorAll('.forcedRule');
       forcedRules.forEach(rule => {
@@ -663,7 +660,7 @@
         const selectedDays = Array.from(daysSelect.selectedOptions).map(opt => opt.value);
         const startTime = rule.querySelector('.forcedRuleStart').value;
         const endTime = rule.querySelector('.forcedRuleEnd').value;
-        const forcedState = rule.querySelector('.forcedRuleState').value;
+        const forcedState = rule.querySelector('.forcedRuleState').value; // "on" or "off"
         schedule = schedule.map((val, index) => {
           const ts = new Date(weatherTimeData[index]);
           const dayName = ts.toLocaleDateString('en-US', { weekday: 'short' });
@@ -693,20 +690,20 @@
       plugDiv.className = 'plugEntry';
       plugDiv.innerHTML = `
         <div class="form-group">
-          <input type="text" class="form-control plugName" placeholder="Plug Name" value="${plugData ? plugData.name : "Example Plug"}" data-toggle="tooltip" title="Enter a unique name for this plug.">
+          <input type="text" class="form-control plugName" placeholder="Plug Name" value="${plugData ? plugData.name : "Plug " + plugIndex}" data-toggle="tooltip" title="Enter a unique name for this plug.">
           <small class="form-text" data-toggle="tooltip" title="This name helps you identify the plug.">Enter a unique name for this smart plug.</small>
         </div>
         <div class="form-row">
           <div class="col">
-            <input type="number" class="form-control plugOnHours" placeholder="On Hours" min="0" value="${plugData ? plugData.onHours : 1}" data-toggle="tooltip" title="Enter the number of hours this plug should be ON per cycle.">
+            <input type="number" class="form-control plugOnHours" placeholder="On Hours" min="0" value="${plugData ? plugData.onHours : 4}" data-toggle="tooltip" title="Enter the number of hours this plug should be ON per cycle.">
             <small class="form-text" data-toggle="tooltip" title="Example: 1 if the plug is on for one hour per day.">Number of hours this plug should be ON per cycle.</small>
           </div>
           <div class="col">
-            <input type="number" class="form-control plugTotalHours" placeholder="Total Hours" min="1" value="${plugData ? plugData.totalHours : 24}" data-toggle="tooltip" title="Enter the total number of hours in each cycle (e.g., 24 for a full day).">
-            <small class="form-text" data-toggle="tooltip" title="This sets the length of each cycle.">Total hours in each cycle.</small>
+            <input type="number" class="form-control plugTotalHours" placeholder="Total Hours" min="1" value="${plugData ? plugData.totalHours : 7}" data-toggle="tooltip" title="Enter the total number of hours in each cycle (e.g., 7 for a 7‑hour cycle).">
+            <small class="form-text" data-toggle="tooltip" title="This sets the length of each cycle.">Total hours in each cycle (e.g., 7 hours).</small>
           </div>
           <div class="col">
-            <input type="number" class="form-control plugKwh" placeholder="kWh" min="0" value="${plugData ? plugData.kwh : 1.5}" data-toggle="tooltip" title="Enter the device power consumption (in kWh).">
+            <input type="number" class="form-control plugKwh" placeholder="kWh" min="0" value="${plugData ? plugData.kwh : 1}" data-toggle="tooltip" title="Enter the device power consumption (in kWh).">
             <small class="form-text" data-toggle="tooltip" title="Example: 1.5 if the device uses 1.5 kWh when ON.">Power consumption in kWh when the plug is ON.</small>
           </div>
         </div>
@@ -808,10 +805,10 @@
         ruleDiv.querySelector('.removeForcedRule').addEventListener('click', function() { container.removeChild(ruleDiv); });
       });
       
-      // When advanced section is shown, update the history log table.
+      // When advanced section is shown, update the history log table
       $(`#advancedSettings-${plugIndex}`).on('shown.bs.collapse', function () { updateHistoryTable(plugDiv); });
       
-      // Populate forced rules if plugData exists.
+      // Populate forced rules if plugData exists
       if (plugData && plugData.forcedRules) {
         plugData.forcedRules.forEach(rule => {
           const container = plugDiv.querySelector('.forcedRulesContainer');
@@ -856,7 +853,7 @@
     }
     document.getElementById('addPlugBtn').addEventListener('click', function() { addPlug(); });
     
-    // Update history log table for a given plug element.
+    // Update history log table for a given plug element (with Duration column)
     function updateHistoryTable(plugEntry) {
       const tableBody = plugEntry.querySelector('.historyLogTable tbody');
       tableBody.innerHTML = "";
@@ -934,18 +931,20 @@
       }
     }
     
-    // Update profit infographic by comparing user-planned vs. optimized schedules.
+    // Update profit infographic by comparing user-planned vs. optimized schedules over the complete forecast period.
     function updateProfitInfographic() {
       if (!weatherTimeData) return;
       const dayGroups = groupTimesByDay(weatherTimeData);
       let totalRescheduledEnergy = 0;
       const plugEntries = document.querySelectorAll('.plugEntry');
+      // For each plug, iterate over each day group
       plugEntries.forEach(entry => {
         const kwh = parseFloat(entry.querySelector('.plugKwh').value);
         const onHours = parseInt(entry.querySelector('.plugOnHours').value, 10);
         const totalHours = parseInt(entry.querySelector('.plugTotalHours').value, 10);
         let plugRescheduled = 0;
         dayGroups.forEach(group => {
+          // Compute user-planned and optimized schedules for this day.
           const userSched = computePlugScheduleForDay(onHours, totalHours, group.times);
           const optSched = computeOptimalPlugScheduleForDay(onHours, totalHours, group, parseInt(document.getElementById('energySlider').value, 10) / 100);
           const userFinal = applyForcedRules(entry, userSched);
@@ -954,12 +953,13 @@
           for (let i = 0; i < userFinal.length; i++) {
             if (userFinal[i] !== optFinal[i]) diffCount++;
           }
+          // A single shift affects two time slots, so effective rescheduled hours = diffCount / 2.
           plugRescheduled += (diffCount / 2) * kwh;
         });
         totalRescheduledEnergy += plugRescheduled;
       });
       const profitDiv = document.getElementById('profitInfographicValue');
-      profitDiv.innerHTML = `<p>${totalRescheduledEnergy.toFixed(2)} kWh</p>`;
+      profitDiv.innerHTML = `<p> ${totalRescheduledEnergy.toFixed(2)} kWh</p>`;
     }
     
     /*********************************************
@@ -1026,8 +1026,8 @@
       } catch (error) {
         console.error("Error in periodic plug state check:", error);
       }
-    }, 10000);
-    
+    }, 10000);  // every 10 seconds
+
     /*********************************************
      * 9) HOURLY WEATHER REFRESH (TOP OF THE HOUR) *
      *********************************************/
@@ -1042,6 +1042,7 @@
       }
     }, 3600000);
     
+    // Safety check: every minute, if weather data is older than 55 minutes, refresh it.
     setInterval(function() {
       try {
         if (lastWeatherUpdate && (new Date() - lastWeatherUpdate > 55 * 60 * 1000)) {
@@ -1054,7 +1055,7 @@
     }, 60000);
     
     /****************************************************
-     * 10) PREVENT SCREENSAVER: Wake Lock TOGGLE FEATURE   *
+     * 10) PREVENT SCREENSAVER: Wake Lock Toggle Feature   *
      ****************************************************/
     let wakeLock = null;
     async function requestWakeLock() {
@@ -1075,24 +1076,27 @@
         console.log('Wake Lock released');
       }
     }
-    document.getElementById('preventScreensaverToggle').addEventListener('change', function() {
+    const screensaverToggle = document.getElementById('preventScreensaverToggle');
+    screensaverToggle.addEventListener('change', function() {
       if (this.checked) { requestWakeLock(); }
       else { releaseWakeLock(); }
     });
     
+    // Re-request wake lock when the page becomes visible again
     document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'visible' && document.getElementById('preventScreensaverToggle').checked && !wakeLock) {
+      if (document.visibilityState === 'visible' && screensaverToggle.checked && !wakeLock) {
         requestWakeLock();
       }
     });
     
-    // "Update Plug Schedules" button handler.
+    // "Update Plug Schedules" button handler
     document.getElementById('updatePlugsBtn').addEventListener('click', function() {
       updatePlugSchedules();
       checkPlugStates();
       updateProfitInfographic();
     });
     
+    // Global error handler: reload the page after 5 seconds if an unhandled error occurs.
     window.onerror = function(message, source, lineno, colno, error) {
       console.error("Global error caught:", message, source, lineno, colno, error);
       setTimeout(function() {
@@ -1100,29 +1104,6 @@
       }, 5000);
       return false;
     };
-    
-    // On initial page load, prefill example settings.
-    window.addEventListener("load", function() {
-      // Set default location to Amsterdam is already in the input value.
-      // Set schedule type to optimized (already set via 'checked' attribute on optimized radio).
-      // If no plug exists, add one example plug.
-      if(document.getElementById("plugList").children.length === 0) {
-        const defaultPlug = {
-          name: "Example Plug",
-          onHours: 1,
-          totalHours: 24,
-          kwh: 1.5,
-          webhookOn: "",
-          webhookOff: "",
-          forcedRules: []
-        };
-        addPlug(defaultPlug);
-      }
-      // Automatically trigger the location form submission to fetch weather for Amsterdam.
-      if(document.getElementById("manualLocation").value === "Amsterdam"){
-        document.getElementById("locationForm").dispatchEvent(new Event('submit'));
-      }
-    });
   </script>
 </body>
 </html>
