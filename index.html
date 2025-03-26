@@ -122,33 +122,33 @@
     <!-- First Row: Dashboard and Profit Overview -->
     <div class="row mb-3">
       <div class="col-md-6">
-        <button class="btn btn-info btn-block overview-button" type="button" data-toggle="collapse" data-target="#dashboardOverview" aria-expanded="false" aria-controls="dashboardOverview">
-          Dashboard Overview
+        <button class="btn btn-info btn-block overview-button" data-toggle="collapse" data-target="#dashboardOverview" aria-expanded="false" aria-controls="dashboardOverview" title="Click to view details about this dashboard functionality.">
+          This Dashboard
         </button>
         <div class="collapse" id="dashboardOverview">
           <div class="overview-card">
-            <h5>Dashboard Overview</h5>
+            <h5>This Dashboard</h5>
             <p>
-              This dashboard is a comprehensive, real-time control center designed to seamlessly integrate weather forecasting with smart plug scheduling. Key features include:
+              This dashboard is a comprehensive, real-time control center designed to seamlessly integrate weather forecasting with smart plug scheduling, because you can save money while being more sustainable. Key features include:
             </p>
             <ul>
-              <li><strong>Real-Time Weather Forecasting:</strong> Fetches weather data (such as wind speed at 80 m and Sun radiation) using your current or manually entered location (with support for automatic geolocation). It computes a renewable energy quality score by balancing solar and wind energy inputs, displayed on an interactive Plotly graph.</li>
+              <li><strong>Real-Time Weather Forecasting:</strong> Fetches weather data (such as wind speed at 80 m and Sun radiation) using your current or manually entered location. It computes a renewable energy quality score by balancing solar and wind energy inputs, displayed on an interactive Plotly graph.</li>
               <li><strong>Smart Plug Scheduling & Control:</strong> Configure smart plugs with custom on/off schedules based on user-planned or weather-optimized settings. Set parameters like on-hours, total cycle hours, device power (kWh), and forced on/off rules. Webhooks update plug status automatically.</li>
               <li><strong>Dynamic Updates & Continuous Operation:</strong> The dashboard runs continuously with self-refreshing weather forecasts, graph updates, and plug schedule checks.</li>
-              <li><strong>Additional Utilities:</strong> Use an energy slider to adjust the balance between solar (Sun radiation) and wind energy inputs and connect many popular smart plug brands.</li>
+              <li><strong>Additional Utilities:</strong> Use an energy slider to adjust the balance between solar power and wind energy importance, probably your area has either more solar panels or wind turbines.</li>
             </ul>
           </div>
         </div>
       </div>
       <div class="col-md-6">
-        <button class="btn btn-info btn-block overview-button" type="button" data-toggle="collapse" data-target="#profitOverview" aria-expanded="false" aria-controls="profitOverview">
-          Profit Overview
+        <button class="btn btn-info btn-block overview-button" data-toggle="collapse" data-target="#profitOverview" aria-expanded="false" aria-controls="profitOverview" title="Click to view information on how this dashboard can save you money and help the environment.">
+          Your Profits
         </button>
         <div class="collapse" id="profitOverview">
           <div class="overview-card">
-            <h5>Profit Overview</h5>
+            <h5>Your Profits</h5>
             <p>
-              Using optimized scheduling, your device energy usage is shifted to the hours with the best renewable energy availability. The script compares your user-planned schedule with the optimized (weather-based) schedule over the complete forecast period to determine how many kWh are rescheduled. This helps lower energy costs, reduce fossil fuel use, and deliver environmental benefits.
+              Using optimized scheduling, your device energy usage is shifted to the hours with the best renewable energy availability. This script compares your user-planned schedule with the optimized (weather-based) schedule over the complete forecast period to determine how many kWh can be rescheduled. This helps lower energy costs, reduce fossil fuel use, help make the energy grid more efficient.
             </p>
           </div>
         </div>
@@ -158,7 +158,7 @@
     <!-- Second Row: Recommended Devices and Usage Guide -->
     <div class="row mb-3">
       <div class="col-md-6">
-        <button class="btn btn-info btn-block overview-button" type="button" data-toggle="collapse" data-target="#recommendedDevices" aria-expanded="false" aria-controls="recommendedDevices">
+        <button class="btn btn-info btn-block overview-button" data-toggle="collapse" data-target="#recommendedDevices" aria-expanded="false" aria-controls="recommendedDevices" title="Click to view a list of devices that are ideal for weather-based smart plugs.">
           Recommended Devices
         </button>
         <div class="collapse" id="recommendedDevices">
@@ -188,19 +188,19 @@
         </div>
       </div>
       <div class="col-md-6">
-        <button class="btn btn-info btn-block overview-button" type="button" data-toggle="collapse" data-target="#usageGuide" aria-expanded="false" aria-controls="usageGuide">
-          Usage Guide
+        <button class="btn btn-info btn-block overview-button" data-toggle="collapse" data-target="#usageGuide" aria-expanded="false" aria-controls="usageGuide" title="Click to view a step-by-step guide on how to use this page.">
+          User Guide
         </button>
         <div class="collapse" id="usageGuide">
           <div class="overview-card">
-            <h5>Usage Guide</h5>
+            <h5>User Guide</h5>
             <ol>
               <li><strong>Set Your Location:</strong> Use automatic geolocation or enter your village/city manually to fetch weather data.</li>
-              <li><strong>Retrieve Weather:</strong> Click "Retrieve Weather" to update the forecast and initialize the dashboard.</li>
-              <li><strong>Adjust the Energy Slider:</strong> Choose your desired balance between Sun radiation and wind energy.</li>
-              <li><strong>Configure Smart Plug Settings:</strong> Set on-hours, total cycle hours, device power (kWh), and webhooks for each plug. Optionally, add forced rules.</li>
+              <li><strong>Click Retrieve Weather:</strong> Click "Retrieve Weather" to update the forecast and initialize the dashboard.</li>
+              <li><strong>Adjust the Energy Slider:</strong> Choose your desired balance between solar power and wind energy. Choose wisely if your area has more solar panels or more wind turbines.</li>
+              <li><strong>Add your smart plug:</strong> Set on-hours, total cycle hours, device power (kWh), and webhooks for each plug. Optionally, add forced rules.</li>
               <li><strong>Select a Schedule Type:</strong> Choose between User Planned and Optimized (Weather-based) schedules. The optimized option shifts the "on" hour to maximize renewable energy usage.</li>
-              <li><strong>Review the Profit Forecast:</strong> See the dynamic "Profit forecast" that shows the total rescheduled energy (in kWh) over the forecast period.</li>
+              <li><strong>Review Your Profit Forecast:</strong> See the dynamic "Profit forecast" showing the total rescheduled energy over the forecast period.</li>
               <li><strong>Save/Load Settings:</strong> Use the buttons to save your configuration or load a previous one.</li>
             </ol>
           </div>
@@ -211,75 +211,75 @@
     <!-- Top Controls (Repeat if needed) -->
     <div id="settingsButtons" class="mb-3 d-flex justify-content-between align-items-center">
       <div>
-        <button type="button" class="btn btn-success" id="saveSettingsBtn">Save Settings</button>
-        <button type="button" class="btn btn-warning" id="loadSettingsBtn">Load Settings</button>
+        <button class="btn btn-success" id="saveSettingsBtn" data-toggle="tooltip" title="Save your current configuration.">Save Settings</button>
+        <button class="btn btn-warning" id="loadSettingsBtn" data-toggle="tooltip" title="Load your previously saved configuration.">Load Settings</button>
       </div>
       <div id="screensaverToggleContainer" class="form-check">
-        <input class="form-check-input" type="checkbox" id="preventScreensaverToggle">
+        <input class="form-check-input" type="checkbox" id="preventScreensaverToggle" data-toggle="tooltip" title="Enable to prevent your screen from sleeping while the dashboard runs.">
         <label class="form-check-label" for="preventScreensaverToggle">Prevent Screensaver</label>
       </div>
     </div>
     
     <!-- Automatic Geolocation Display -->
-    <div id="locationDisplay" class="mt-3">
+    <div id="locationDisplay" class="mt-3" data-toggle="tooltip" title="This area displays your current location information.">
       <p>Location will appear here when retrieved.</p>
     </div>
     
     <!-- New Button to get Geolocation Automatically -->
-    <button type="button" id="getGeoBtn" class="btn btn-primary mb-3">Get Geolocation Automatically</button>
+    <button id="getGeoBtn" class="btn btn-primary mb-3" data-toggle="tooltip" title="Click to automatically retrieve your location.">Get Geolocation Automatically</button>
     
     <!-- Manual Location Input with Timer -->
-    <h2 class="mt-5">Enter Location Manually</h2>
+    <h2 class="mt-5" data-toggle="tooltip" title="Enter your village or city to get the weather forecast.">Enter Location Manually</h2>
     <form id="locationForm">
       <div class="form-group">
-        <input type="text" class="form-control" id="manualLocation" placeholder="Enter village or city name" required>
-        <small class="form-text">Type the name of your village or city to fetch coordinates and weather.</small>
+        <input type="text" class="form-control" id="manualLocation" placeholder="Enter village or city name" required data-toggle="tooltip" title="Type your village or city name here.">
+        <small class="form-text" data-toggle="tooltip" title="Your village or city name will be used to fetch weather data.">Type the name of your village or city to fetch coordinates and weather.</small>
       </div>
       <div id="timerContainer">
-        <button type="submit" class="btn btn-secondary">Retrieve Weather</button>
+        <button type="submit" class="btn btn-secondary" data-toggle="tooltip" title="Click to retrieve weather data for your location.">Retrieve Weather</button>
         <div id="timerLabel">Next Forecast Refresh:</div>
-        <div id="refreshTimer">00:00:00</div>
+        <div id="refreshTimer"></div>
       </div>
     </form>
-    <div id="manualLocationResult" class="mt-3"></div>
+    <div id="manualLocationResult" class="mt-3" data-toggle="tooltip" title="This area shows the results of your manual location search."></div>
     
     <!-- Forecast Section -->
     <div id="forecastSection" class="mt-5">
-      <h3>Weather & Renewable Energy Forecast</h3>
+      <h3 data-toggle="tooltip" title="This section displays the weather forecast and renewable energy quality.">Weather & Renewable Energy Forecast</h3>
       <!-- Slider for renewable energy weight -->
       <div class="form-group">
-        <label for="energySlider">
-          Importance: <span id="sunWeightLabel">50</span>% Sun / <span id="windWeightLabel">50</span>% Wind
+        <label for="energySlider" data-toggle="tooltip" title="Adjust the slider to balance the availability of either solar panels or wind turbines in your area.">
+          My area has: <span id="sunWeightLabel">50</span>% Solar Panels / <span id="windWeightLabel">50</span>% Wind Turbines
         </label>
-        <input type="range" class="form-control-range" id="energySlider" min="0" max="100" value="50">
-        <small class="form-text">Adjust the slider to set the weighting between solar (Sun radiation) and wind energy. This will update both the renewable energy quality line and (if Optimized is selected) the plug schedules immediately.</small>
+        <input type="range" class="form-control-range" id="energySlider" min="0" max="100" value="50" data-toggle="tooltip" title="Slide to adjust the relative availability of either solar panels or wind turbines around your location.">
+        <small class="form-text" data-toggle="tooltip" title="Adjusting this slider updates the renewable energy quality calculation.">Adjust the slider to set the weighting between solar panel availability vs wind turbines.</small>
       </div>
       <!-- Merged Graph Container -->
-      <div id="mergedGraph" class="mt-3"></div>
+      <div id="mergedGraph" data-toggle="tooltip" title="Interactive graph showing weather forecast, renewable energy quality, and plug schedules."></div>
     </div>
     
     <!-- Smart Plug Settings Section -->
     <div id="smartPlugSettingsSection" class="mt-5">
-      <h3 class="text-center">Smart Plug Settings</h3>
+      <h3 class="text-center" data-toggle="tooltip" title="Configure your smart plug settings below.">Smart Plug Settings</h3>
       <!-- Schedule Type Section with Profit Forecast -->
       <div class="row">
         <div class="col-md-6">
-          <label>Schedule Type:</label>
+          <label data-toggle="tooltip" title="Select your preferred scheduling method.">Schedule Type:</label>
           <div class="form-check">
-            <input class="form-check-input" type="radio" name="scheduleType" id="userPlanned" value="user" checked>
+            <input class="form-check-input" type="radio" name="scheduleType" id="userPlanned" value="user" checked data-toggle="tooltip" title="User Planned: Your plug will be on at the times you specified.">
             <label class="form-check-label" for="userPlanned">User Planned</label>
           </div>
           <div class="form-check">
-            <input class="form-check-input" type="radio" name="scheduleType" id="optimized" value="optimized">
+            <input class="form-check-input" type="radio" name="scheduleType" id="optimized" value="optimized" data-toggle="tooltip" title="Optimized (Weather-based): The plug's on-hour is shifted to the most renewable hour.">
             <label class="form-check-label" for="optimized">Optimized (Weather-based)</label>
           </div>
         </div>
         <div class="col-md-6">
           <div class="card bg-dark text-white">
             <div class="card-body text-center">
-              <h5 class="card-title">Profit forecast</h5>
-              <div id="profitInfographicValue">
-                <p>Profit forecast: 0.00 kWh</p>
+              <h5 class="card-title" data-toggle="tooltip" title="This forecast shows the total energy (in kWh) that has been rescheduled to renewables over the forecast period.">The Profit Forecast</h5>
+              <div id="profitInfographicValue" data-toggle="tooltip" title="This forecast shows the total energy (in kWh) that has been rescheduled to renewables over the forecast period.">
+                <p>      0.00 kWh</p>
               </div>
             </div>
           </div>
@@ -287,11 +287,11 @@
       </div>
       
       <!-- Plug Settings Panel -->
-      <div id="plugSchedulePanel" class="mt-3">
+      <div id="plugSchedulePanel" class="mt-3" data-toggle="tooltip" title="Configure each smart plug's settings below.">
         <div id="plugList"></div>
-        <button type="button" class="btn btn-outline-secondary mb-2" id="addPlugBtn">Add Plug</button>
-        <small class="form-text mb-2">Click "Add Plug" to add a new smart plug. Fill in the details below for each plug.</small>
-        <button type="button" class="btn btn-info btn-block" id="updatePlugsBtn">Update Plug Schedules</button>
+        <button type="button" class="btn btn-outline-secondary mb-2" id="addPlugBtn" data-toggle="tooltip" title="Click to add a new smart plug configuration.">Add Plug</button>
+        <small class="form-text mb-2" data-toggle="tooltip" title="Click 'Add Plug' and then fill in the details for each plug.">Click "Add Plug" to add a new smart plug. Fill in the details below for each plug.</small>
+        <button type="button" class="btn btn-info btn-block" id="updatePlugsBtn" data-toggle="tooltip" title="Click to update the plug schedules and recalculate the profit forecast.">Update Plug Schedules</button>
       </div>
     </div>
   </div>
@@ -300,6 +300,11 @@
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
   <script>
+    // Initialize Bootstrap tooltips
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip();
+    });
+
     /*************************************
      * 1) GLOBAL VARIABLES & TIMER SETUP *
      *************************************/
@@ -684,43 +689,43 @@
       plugDiv.className = 'plugEntry';
       plugDiv.innerHTML = `
         <div class="form-group">
-          <input type="text" class="form-control plugName" placeholder="Plug Name" value="${plugData ? plugData.name : "Plug " + plugIndex}">
-          <small class="form-text">Enter a unique name for this smart plug.</small>
+          <input type="text" class="form-control plugName" placeholder="Plug Name" value="${plugData ? plugData.name : "Plug " + plugIndex}" data-toggle="tooltip" title="Enter a unique name for this plug.">
+          <small class="form-text" data-toggle="tooltip" title="This name helps you identify the plug.">Enter a unique name for this smart plug.</small>
         </div>
         <div class="form-row">
           <div class="col">
-            <input type="number" class="form-control plugOnHours" placeholder="On Hours" min="0" value="${plugData ? plugData.onHours : 4}">
-            <small class="form-text">Number of hours this plug should be ON per cycle.</small>
+            <input type="number" class="form-control plugOnHours" placeholder="On Hours" min="0" value="${plugData ? plugData.onHours : 4}" data-toggle="tooltip" title="Enter the number of hours this plug should be ON per cycle.">
+            <small class="form-text" data-toggle="tooltip" title="Example: 1 if the plug is on for one hour per day.">Number of hours this plug should be ON per cycle.</small>
           </div>
           <div class="col">
-            <input type="number" class="form-control plugTotalHours" placeholder="Total Hours" min="1" value="${plugData ? plugData.totalHours : 7}">
-            <small class="form-text">Total hours in each cycle (e.g., 7 hours).</small>
+            <input type="number" class="form-control plugTotalHours" placeholder="Total Hours" min="1" value="${plugData ? plugData.totalHours : 7}" data-toggle="tooltip" title="Enter the total number of hours in each cycle (e.g., 7 for a 7‑hour cycle).">
+            <small class="form-text" data-toggle="tooltip" title="This sets the length of each cycle.">Total hours in each cycle (e.g., 7 hours).</small>
           </div>
           <div class="col">
-            <input type="number" class="form-control plugKwh" placeholder="kWh" min="0" value="${plugData ? plugData.kwh : 1}">
-            <small class="form-text">Power consumption in kWh when the plug is ON.</small>
+            <input type="number" class="form-control plugKwh" placeholder="kWh" min="0" value="${plugData ? plugData.kwh : 1}" data-toggle="tooltip" title="Enter the device power consumption (in kWh).">
+            <small class="form-text" data-toggle="tooltip" title="Example: 1.5 if the device uses 1.5 kWh when ON.">Power consumption in kWh when the plug is ON.</small>
           </div>
         </div>
         <div class="form-group mt-2">
-          <input type="text" class="form-control webhookOn" placeholder="Webhook URL for ON" value="${plugData ? plugData.webhookOn : ""}">
-          <small class="form-text">Enter the webhook URL to turn this plug ON.</small>
-          <button type="button" class="btn btn-sm btn-secondary testWebhookOn mt-1">Test ON Webhook</button>
+          <input type="text" class="form-control webhookOn" placeholder="Webhook URL for ON" value="${plugData ? plugData.webhookOn : ""}" data-toggle="tooltip" title="Enter the URL that triggers turning the plug ON.">
+          <small class="form-text" data-toggle="tooltip" title="This webhook is called to switch the plug on.">Enter the webhook URL to turn this plug ON.</small>
+          <button type="button" class="btn btn-sm btn-secondary testWebhookOn mt-1" data-toggle="tooltip" title="Click to test the ON webhook.">Test ON Webhook</button>
         </div>
         <div class="form-group">
-          <input type="text" class="form-control webhookOff" placeholder="Webhook URL for OFF" value="${plugData ? plugData.webhookOff : ""}">
-          <small class="form-text">Enter the webhook URL to turn this plug OFF.</small>
-          <button type="button" class="btn btn-sm btn-secondary testWebhookOff mt-1">Test OFF Webhook</button>
+          <input type="text" class="form-control webhookOff" placeholder="Webhook URL for OFF" value="${plugData ? plugData.webhookOff : ""}" data-toggle="tooltip" title="Enter the URL that triggers turning the plug OFF.">
+          <small class="form-text" data-toggle="tooltip" title="This webhook is called to switch the plug off.">Enter the webhook URL to turn this plug OFF.</small>
+          <button type="button" class="btn btn-sm btn-secondary testWebhookOff mt-1" data-toggle="tooltip" title="Click to test the OFF webhook.">Test OFF Webhook</button>
         </div>
-        <button type="button" class="btn btn-danger btn-sm deletePlug">Delete Plug</button>
-        <div class="plugStatus" style="margin-top:5px;">Status: UNKNOWN</div>
+        <button type="button" class="btn btn-danger btn-sm deletePlug" data-toggle="tooltip" title="Click to remove this plug configuration.">Delete Plug</button>
+        <div class="plugStatus" style="margin-top:5px;" data-toggle="tooltip" title="This displays the current status of the plug.">Status: UNKNOWN</div>
         <!-- Advanced Settings: Forced Schedule & History Log -->
-        <button class="btn btn-sm btn-info mt-2 toggleAdvancedSettings" type="button" data-toggle="collapse" data-target="#advancedSettings-${plugIndex}">Toggle Advanced Settings</button>
+        <button class="btn btn-sm btn-info mt-2 toggleAdvancedSettings" type="button" data-toggle="collapse" data-target="#advancedSettings-${plugIndex}" data-toggle="tooltip" title="Click to view advanced settings for this plug.">Toggle Advanced Settings</button>
         <div class="collapse plugAdvancedSettings" id="advancedSettings-${plugIndex}">
           <div class="forcedScheduleSection mt-2">
             <h5>Forced Schedule Settings</h5>
             <div class="forcedRulesContainer"></div>
-            <button type="button" class="btn btn-secondary btn-sm addForcedRule">Add Forced Rule</button>
-            <small class="form-text">Define forced on/off rules (select multiple days if needed, and set the same hours for them).</small>
+            <button type="button" class="btn btn-secondary btn-sm addForcedRule" data-toggle="tooltip" title="Click to add a forced rule for this plug.">Add Forced Rule</button>
+            <small class="form-text" data-toggle="tooltip" title="Forced rules override the computed schedule at specified times.">Define forced on/off rules (select multiple days if needed, and set the same hours for them).</small>
           </div>
           <div class="historyLogSection mt-3">
             <h5>History Log</h5>
@@ -766,7 +771,7 @@
         ruleDiv.innerHTML = `
           <div class="col-4">
             <label>Days:</label>
-            <select class="form-control forcedRuleDays" multiple size="3">
+            <select class="form-control forcedRuleDays" multiple size="3" data-toggle="tooltip" title="Select the days this rule applies to.">
               <option value="Mon">Mon</option>
               <option value="Tue">Tue</option>
               <option value="Wed">Wed</option>
@@ -778,21 +783,21 @@
           </div>
           <div class="col-3">
             <label>Start Time:</label>
-            <input type="time" class="form-control forcedRuleStart" value="08:00">
+            <input type="time" class="form-control forcedRuleStart" value="08:00" data-toggle="tooltip" title="Set the start time for this rule.">
           </div>
           <div class="col-3">
             <label>End Time:</label>
-            <input type="time" class="form-control forcedRuleEnd" value="09:00">
+            <input type="time" class="form-control forcedRuleEnd" value="09:00" data-toggle="tooltip" title="Set the end time for this rule.">
           </div>
           <div class="col-2">
             <label>State:</label>
-            <select class="form-control forcedRuleState">
+            <select class="form-control forcedRuleState" data-toggle="tooltip" title="Choose whether to force the plug ON or OFF during this time interval.">
               <option value="on">ON</option>
               <option value="off">OFF</option>
             </select>
           </div>
           <div class="col-12">
-            <button type="button" class="btn btn-danger btn-sm removeForcedRule mt-1">Remove Rule</button>
+            <button type="button" class="btn btn-danger btn-sm removeForcedRule mt-1" data-toggle="tooltip" title="Click to remove this rule.">Remove Rule</button>
           </div>
         `;
         container.appendChild(ruleDiv);
@@ -811,7 +816,7 @@
           ruleDiv.innerHTML = `
             <div class="col-4">
               <label>Days:</label>
-              <select class="form-control forcedRuleDays" multiple size="3">
+              <select class="form-control forcedRuleDays" multiple size="3" data-toggle="tooltip" title="Select the days this rule applies to.">
                 <option value="Mon">Mon</option>
                 <option value="Tue">Tue</option>
                 <option value="Wed">Wed</option>
@@ -823,21 +828,21 @@
             </div>
             <div class="col-3">
               <label>Start Time:</label>
-              <input type="time" class="form-control forcedRuleStart" value="${rule.start}">
+              <input type="time" class="form-control forcedRuleStart" value="${rule.start}" data-toggle="tooltip" title="Start time for this rule.">
             </div>
             <div class="col-3">
               <label>End Time:</label>
-              <input type="time" class="form-control forcedRuleEnd" value="${rule.end}">
+              <input type="time" class="form-control forcedRuleEnd" value="${rule.end}" data-toggle="tooltip" title="End time for this rule.">
             </div>
             <div class="col-2">
               <label>State:</label>
-              <select class="form-control forcedRuleState">
+              <select class="form-control forcedRuleState" data-toggle="tooltip" title="Force the plug ON or OFF during this period.">
                 <option value="on" ${rule.state === "on" ? "selected" : ""}>ON</option>
                 <option value="off" ${rule.state === "off" ? "selected" : ""}>OFF</option>
               </select>
             </div>
             <div class="col-12">
-              <button type="button" class="btn btn-danger btn-sm removeForcedRule mt-1">Remove Rule</button>
+              <button type="button" class="btn btn-danger btn-sm removeForcedRule mt-1" data-toggle="tooltip" title="Remove this rule.">Remove Rule</button>
             </div>
           `;
           container.appendChild(ruleDiv);
@@ -931,7 +936,7 @@
       const dayGroups = groupTimesByDay(weatherTimeData);
       let totalRescheduledEnergy = 0;
       const plugEntries = document.querySelectorAll('.plugEntry');
-      // For each plug, iterate over each day
+      // For each plug, iterate over each day group
       plugEntries.forEach(entry => {
         const kwh = parseFloat(entry.querySelector('.plugKwh').value);
         const onHours = parseInt(entry.querySelector('.plugOnHours').value, 10);
@@ -947,13 +952,13 @@
           for (let i = 0; i < userFinal.length; i++) {
             if (userFinal[i] !== optFinal[i]) diffCount++;
           }
-          // A single shift changes two slots, so effective difference = diffCount / 2.
+          // A single shift affects two time slots, so effective rescheduled hours = diffCount / 2.
           plugRescheduled += (diffCount / 2) * kwh;
         });
         totalRescheduledEnergy += plugRescheduled;
       });
       const profitDiv = document.getElementById('profitInfographicValue');
-      profitDiv.innerHTML = `<p>Profit forecast: ${totalRescheduledEnergy.toFixed(2)} kWh</p>`;
+      profitDiv.innerHTML = `<p> ${totalRescheduledEnergy.toFixed(2)} kWh</p>`;
     }
     
     /*********************************************
