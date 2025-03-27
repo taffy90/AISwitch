@@ -140,10 +140,10 @@
       <h1>Welcome to Smart Plug Switcher</h1>
       <p>
         Imagine if your home appliances could automatically adjust their schedules to use energy when it’s at its greenest. 
-        With Smart Plug Switcher, you can effortlessly set your devices—like your Electric (water) Heaters, Home Battery systems, Hot Tubs, Fans—to run  
-        during peak solar or wind hours. This means lower energy bills, less strain on the power grid, and a smaller carbon footprint. 
-        Whether you’re a busy homeowner, a small business, or simply passionate about saving money and the planet, our system makes 
-        smart energy management accessible to everyone.
+        With Smart Plug Switcher, you can effortlessly set your devices—like your Electric (water) Heaters, Home Battery systems, Hot Tubs, and Fans—to run during peak solar or wind hours. This means lower energy bills, less strain on the power grid, and a smaller carbon footprint.
+      </p>
+      <p>
+        To get started, all you need is a standard smart plug and an internet connection.
       </p>
     </div>
 
@@ -172,7 +172,9 @@
           My area has: <span id="sunWeightLabel">50</span>% Solar Panels / <span id="windWeightLabel">50</span>% Wind Turbines
         </label>
         <input type="range" class="form-control-range" id="energySlider" min="0" max="100" value="50" data-toggle="tooltip" title="Slide to adjust the relative availability of solar panels vs. wind turbines.">
-        <small class="form-text" data-toggle="tooltip" title="Adjusting this slider updates the renewable energy quality calculation.">Adjust the slider to set the weighting between solar panel availability vs wind turbines.</small>
+        <small class="form-text" data-toggle="tooltip" title="Upcoming: A regional database of available solar panels and wind turbines will automatically adjust this slider based on your location.">
+          Adjust the slider to set the weighting between solar panel availability vs wind turbines.
+        </small>
       </div>
       <div id="mergedGraph" data-toggle="tooltip" title="Interactive graph showing weather forecast, renewable energy quality, and plug schedules."></div>
     </div>
@@ -241,9 +243,26 @@
           <div class="collapse" id="recommendedDevices">
             <div class="overview-card">
               <h5>Recommended Devices</h5>
-              <p>
-                Discover which appliances benefit most from smart scheduling—like electric heaters, home battery systems, hot tubs, and fans.
-              </p>
+              <p>These devices are ideal candidates for weather-based smart plugs, as they do not require 100% uptime:</p>
+              <ul>
+                <li>Standard Air Conditioners</li>
+                <li>Home Battery Systems</li>
+                <li>Electric Vehicle Chargers</li>
+                <li>Refrigerators/Freezers</li>
+                <li>Water Heaters</li>
+                <li>Sump Pumps</li>
+                <li>Hot Tubs/Spas</li>
+                <li>Heated Floors</li>
+                <li>Air Purifiers</li>
+                <li>Dehumidifiers/Humidifiers</li>
+                <li>Electric Space Heaters</li>
+                <li>Fans</li>
+                <li>Fish Tank Heaters, Pumps and Filters</li>
+                <li>Industrial Equipment</li>
+                <li>Electric Water Pumps</li>
+                <li>Irrigation Systems</li>
+                <li>Pool Pumps</li>
+              </ul>
             </div>
           </div>
         </div>
