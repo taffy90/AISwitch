@@ -2,20 +2,19 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <!-- Updated title -->
-  <title>Smart Plug Switcher - make your electric devices run on renewables with software</title>
+  <!-- Updated Title -->
+  <title>Smart Plug Switcher – make your electric devices run on renewables with software</title>
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <!-- Import Bootstrap CSS for styling and collapse functionality -->
+  <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <!-- Import Orbitron font for a futuristic look; additional fonts will be loaded by the user settings -->
+  <!-- Load several fonts (Corbel will be default) -->
   <link href="https://fonts.googleapis.com/css?family=Corbel|Arial|Verdana|Tahoma&display=swap" rel="stylesheet">
-  <!-- Import Plotly for interactive graphs -->
+  <!-- Plotly -->
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
   <style>
     body {
       background-color: #1a1a1a;
       color: #e0e0e0;
-      /* Default to Corbel */
       font-family: 'Corbel', sans-serif;
       font-size: 16px;
     }
@@ -23,45 +22,42 @@
       color: #f0f0f0;
     }
     .container {
-      margin-top: 120px; /* leave room for fixed navbar and overall settings */
+      margin-top: 120px; /* Leave room for fixed navbar */
     }
-    /* Navbar styling */
+    /* Navbar */
     .navbar-custom {
       background-color: #222222;
     }
-    .navbar-custom .navbar-brand, .navbar-custom .nav-link, .navbar-custom .form-inline {
+    .navbar-custom .navbar-brand,
+    .navbar-custom .nav-link {
       color: #e0e0e0;
     }
     .navbar-custom .nav-link:hover {
       color: #00ff00;
     }
-    /* Overall Settings Panel */
-    .overall-settings {
-      background-color: #333;
-      color: #fff;
-      padding: 10px 15px;
-      border-radius: 5px;
-      margin: 10px 0;
+    /* Light mode overrides */
+    .light-mode {
+      background-color: #ffffff !important;
+      color: #000000 !important;
     }
-    .overall-settings label {
-      margin-right: 10px;
+    .light-mode .navbar-custom {
+      background-color: #f8f9fa !important;
     }
-    /* Collapsible Overview Sections */
-    .overview-button {
-      margin-bottom: 10px;
+    .light-mode .navbar-custom .nav-link,
+    .light-mode .navbar-custom .navbar-brand {
+      color: #000000 !important;
     }
-    .overview-card {
-      background-color: #333;
-      color: #fff;
-      padding: 15px;
-      border-radius: 8px;
-      margin-bottom: 20px;
+    /* Marketing Jumbotron */
+    .jumbotron {
+      padding: 2rem 1rem;
+      margin-bottom: 2rem;
+      border-radius: 0.3rem;
     }
-    /* Forecast and Smart Plug Settings take full width */
+    /* Forecast & Smart Plug Settings */
     #forecastSection, #smartPlugSettingsSection {
       margin-bottom: 40px;
     }
-    /* Styling for the plug settings panel */
+    /* Plug Settings Panel */
     #plugSchedulePanel {
       background: #2a2a2a;
       border: 1px solid #444;
@@ -83,7 +79,7 @@
       font-size: 0.85rem;
       color: #b0b0b0;
     }
-    /* Graph styling */
+    /* Graph Styling */
     #mergedGraph {
       border: 1px solid #444;
       padding: 10px;
@@ -92,194 +88,65 @@
       width: 100%;
       height: 400px;
     }
-    /* Timer styling */
-    #refreshTimer {
-      font-size: 1.5em;
-      font-weight: bold;
-      color: #00ff00;
-      border: 2px solid #00ff00;
-      border-radius: 5px;
-      padding: 5px 10px;
-      white-space: nowrap;
-    }
-    #timerLabel {
-      font-size: 1em;
-      color: #f0f0f0;
-    }
-    /* Advanced Settings styling */
-    .plugAdvancedSettings {
-      margin-top: 10px;
-      padding: 10px;
-      border: 1px solid #555;
-      border-radius: 4px;
-      background: #444;
-    }
-    .forcedRule {
-      border: 1px solid #666;
-      padding: 5px;
-      margin-bottom: 5px;
-      border-radius: 3px;
-      background: #555;
-    }
-    .forcedRule input.form-control, 
-    .forcedRule select.form-control {
+    /* Timer Styling inside navbar collapse */
+    #timerLabelCollapse {
+      font-size: 1rem;
       color: #e0e0e0;
-      background-color: #444;
+    }
+    /* Ensure the navbar is always collapsed (even on large screens) */
+    .navbar-collapse {
+      background-color: #222222;
+    }
+    /* Overview Buttons at Bottom */
+    .overview-button {
+      margin-bottom: 10px;
+    }
+    .overview-card {
+      background-color: #333;
+      color: #fff;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
     }
   </style>
 </head>
 <body>
-  <!-- Fixed Top Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark fixed-top navbar-custom" data-toggle="tooltip" title="Use the menu items and controls below to navigate and configure the dashboard.">
-    <a class="navbar-brand" href="#">Airplane Dashboard</a>
-    <div class="collapse navbar-collapse">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
-          <a class="nav-link" data-toggle="collapse" data-target="#dashboardOverview" title="Click to view details about this dashboard functionality.">Dashboard</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" data-toggle="collapse" data-target="#profitOverview" title="Click to view information on how this dashboard can save you money.">Profits</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" data-toggle="collapse" data-target="#recommendedDevices" title="Click to view recommended devices for smart plugs.">Devices</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" data-toggle="collapse" data-target="#usageGuide" title="Click to view the user guide.">Guide</a>
-        </li>
-      </ul>
-      <div class="form-inline">
-        <span id="timerLabel" class="mr-2">Next Forecast:</span>
-        <span id="refreshTimer"></span>
+  <!-- Fixed Navbar with Hamburger Menu -->
+  <nav class="navbar navbar-dark fixed-top navbar-custom">
+    <a class="navbar-brand" href="#">Smart Plug Switcher</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMain">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse" id="navbarMain">
+      <div class="bg-dark p-3">
+        <ul class="navbar-nav">
+          <!-- Navigation links can be added here if needed -->
+        </ul>
+        <hr class="bg-secondary">
+        <div class="mb-2">
+          <strong id="timerLabelCollapse">Next Forecast:</strong> <span id="refreshTimer"></span>
+        </div>
+        <div class="d-flex justify-content-between">
+          <button class="btn btn-success btn-sm" id="saveSettingsBtn" title="Save your current configuration.">Save Settings</button>
+          <button class="btn btn-warning btn-sm" id="loadSettingsBtn" title="Load your previously saved configuration.">Load Settings</button>
+        </div>
       </div>
     </div>
   </nav>
 
-  <!-- Overall Settings Panel -->
   <div class="container">
-    <div class="overall-settings" data-toggle="tooltip" title="Change overall settings for the page here.">
-      <div class="row">
-        <div class="col-md-4">
-          <label for="fontSelect">Font Family:</label>
-          <select id="fontSelect" class="form-control form-control-sm">
-            <option value="'Corbel', sans-serif" selected>Corbel</option>
-            <option value="'Arial', sans-serif">Arial</option>
-            <option value="'Verdana', sans-serif">Verdana</option>
-            <option value="'Tahoma', sans-serif">Tahoma</option>
-          </select>
-        </div>
-        <div class="col-md-4">
-          <label for="fontSizeRange">Font Size:</label>
-          <input type="range" id="fontSizeRange" min="12" max="24" value="16" class="form-control-range">
-          <span id="fontSizeDisplay">16px</span>
-        </div>
-        <div class="col-md-4">
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="preventScreensaverToggleOverall" data-toggle="tooltip" title="Toggle to prevent your screen from sleeping.">
-            <label class="form-check-label" for="preventScreensaverToggleOverall">Prevent Screensaver</label>
-          </div>
-        </div>
-      </div>
+    <!-- Marketing Text Section with Revised Text -->
+    <div class="jumbotron bg-dark text-white" id="marketing">
+      <h1>Welcome to Smart Plug Switcher</h1>
+      <p>
+        Imagine if your home appliances could automatically adjust their schedules to use energy when it’s at its greenest. 
+        With Smart Plug Switcher, you can effortlessly set your devices—like your Electric (water) Heaters, Home Battery systems, Hot Tubs, Fans—to run  
+        during peak solar or wind hours. This means lower energy bills, less strain on the power grid, and a smaller carbon footprint. 
+        Whether you’re a busy homeowner, a small business, or simply passionate about saving money and the planet, our system makes 
+        smart energy management accessible to everyone.
+      </p>
     </div>
-    
-    <!-- Rest of the page (Overview sections, location input, forecast, smart plug settings) -->
-    
-    <!-- Overview Sections -->
-    <div class="row mb-3">
-      <div class="col-md-6">
-        <button class="btn btn-info btn-block overview-button" data-toggle="collapse" data-target="#dashboardOverview" aria-expanded="false" aria-controls="dashboardOverview" title="Click to view details about this dashboard functionality.">
-          This Dashboard
-        </button>
-        <div class="collapse" id="dashboardOverview">
-          <div class="overview-card">
-            <h5>This Dashboard</h5>
-            <p>
-              This dashboard is a comprehensive, real-time control center designed to seamlessly integrate weather forecasting with smart plug scheduling, because you can save money while being more sustainable. Key features include:
-            </p>
-            <ul>
-              <li><strong>Real-Time Weather Forecasting:</strong> Fetches weather data (such as wind speed at 80 m and Sun radiation) using your current or manually entered location. It computes a renewable energy quality score by balancing solar and wind energy inputs, displayed on an interactive Plotly graph.</li>
-              <li><strong>Smart Plug Scheduling & Control:</strong> Configure smart plugs with custom on/off schedules based on user-planned or weather-optimized settings. Set parameters like on-hours, total cycle hours, device power (kWh), and forced on/off rules. Webhooks update plug status automatically.</li>
-              <li><strong>Dynamic Updates & Continuous Operation:</strong> The dashboard runs continuously with self-refreshing weather forecasts, graph updates, and plug schedule checks.</li>
-              <li><strong>Additional Utilities:</strong> Use an energy slider to adjust the balance between solar power and wind energy importance – tailor this if your area has more solar panels or wind turbines.</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <button class="btn btn-info btn-block overview-button" data-toggle="collapse" data-target="#profitOverview" aria-expanded="false" aria-controls="profitOverview" title="Click to view information on how this dashboard can save you money and help the environment.">
-          Your Profits
-        </button>
-        <div class="collapse" id="profitOverview">
-          <div class="overview-card">
-            <h5>Your Profits</h5>
-            <p>
-              Using optimized scheduling, your device energy usage is shifted to the hours with the best renewable energy availability. This script compares your user-planned schedule with the optimized (weather-based) schedule over the complete forecast period to determine how many kWh can be rescheduled. This helps lower energy costs, reduce fossil fuel use, and help make the energy grid more efficient.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Second Row: Recommended Devices and User Guide -->
-    <div class="row mb-3">
-      <div class="col-md-6">
-        <button class="btn btn-info btn-block overview-button" data-toggle="collapse" data-target="#recommendedDevices" aria-expanded="false" aria-controls="recommendedDevices" title="Click to view a list of devices that are ideal for weather-based smart plugs.">
-          Recommended Devices
-        </button>
-        <div class="collapse" id="recommendedDevices">
-          <div class="overview-card">
-            <h5>Recommended Devices</h5>
-            <p>These devices are ideal candidates for weather-based smart plugs, as they do not need to be on 100% of the time:</p>
-            <ul>
-              <li>Standard Air Conditioners</li>
-              <li>Home Battery Systems</li>
-              <li>Electric Vehicle Chargers</li>
-              <li>Refrigerators/Freezers</li>
-              <li>Water Heaters</li>
-              <li>Sump Pumps</li>
-              <li>Hot Tubs/Spas</li>
-              <li>Heated Floors</li>
-              <li>Air Purifiers</li>
-              <li>Dehumidifiers/Humidifiers</li>
-              <li>Electric Space Heaters</li>
-              <li>Fans</li>
-              <li>Fish Tank Heaters, Pumps and Filters</li>
-              <li>Industrial Equipment</li>
-              <li>Electric Water Pumps</li>
-              <li>Irrigation Systems</li>
-              <li>Pool Pumps</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <button class="btn btn-info btn-block overview-button" data-toggle="collapse" data-target="#usageGuide" aria-expanded="false" aria-controls="usageGuide" title="Click to view a step-by-step guide on how to use this page.">
-          User Guide
-        </button>
-        <div class="collapse" id="usageGuide">
-          <div class="overview-card">
-            <h5>User Guide</h5>
-            <ol>
-              <li><strong>Set Your Location:</strong> Use automatic geolocation or enter your village/city manually to fetch weather data.</li>
-              <li><strong>Click Retrieve Weather:</strong> Click "Retrieve Weather" to update the forecast and initialize the dashboard.</li>
-              <li><strong>Adjust the Energy Slider:</strong> Choose your desired balance between solar power and wind energy. Choose wisely if your area has more solar panels or more wind turbines.</li>
-              <li><strong>Add your smart plug:</strong> Set on-hours, total cycle hours, device power (kWh), and webhooks for each plug. Optionally, add forced rules.</li>
-              <li><strong>Select a Schedule Type:</strong> Choose between <strong>User Planned</strong> and <strong>Optimized (Weather-based)</strong> schedules. <em>Optimized</em> is now the default – all plugs will follow the same optimized schedule as shown in the graph.</li>
-              <li><strong>Review Your Profit Forecast:</strong> See the dynamic "Profit forecast" showing the total rescheduled energy over the forecast period.</li>
-              <li><strong>Save/Load Settings:</strong> Use the buttons to save your configuration or load a previous one.</li>
-            </ol>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Settings Controls (Save/Load already in navbar remain here as well) -->
-    <div id="settingsButtons" class="mb-3 d-flex justify-content-between align-items-center">
-      <div>
-        <button class="btn btn-success" id="saveSettingsBtn" data-toggle="tooltip" title="Save your current configuration.">Save Settings</button>
-        <button class="btn btn-warning" id="loadSettingsBtn" data-toggle="tooltip" title="Load your previously saved configuration.">Load Settings</button>
-      </div>
-    </div>
-    
+
     <!-- Location Display and Manual Input -->
     <div id="locationDisplay" class="mt-3" data-toggle="tooltip" title="This area displays your current location information.">
       <p>Location will appear here when retrieved.</p>
@@ -293,8 +160,6 @@
       </div>
       <div id="timerContainer">
         <button type="submit" class="btn btn-secondary" data-toggle="tooltip" title="Click to retrieve weather data for your location.">Retrieve Weather</button>
-        <div id="timerLabel">Next Forecast Refresh:</div>
-        <div id="refreshTimer"></div>
       </div>
     </form>
     <div id="manualLocationResult" class="mt-3" data-toggle="tooltip" title="This area shows the results of your manual location search."></div>
@@ -303,10 +168,10 @@
     <div id="forecastSection" class="mt-5">
       <h3 data-toggle="tooltip" title="This section displays the weather forecast and renewable energy quality.">Weather & Renewable Energy Forecast</h3>
       <div class="form-group">
-        <label for="energySlider" data-toggle="tooltip" title="Adjust the slider to balance the availability of either solar panels or wind turbines in your area.">
+        <label for="energySlider" data-toggle="tooltip" title="Adjust the slider to balance solar panels vs. wind turbines in your area.">
           My area has: <span id="sunWeightLabel">50</span>% Solar Panels / <span id="windWeightLabel">50</span>% Wind Turbines
         </label>
-        <input type="range" class="form-control-range" id="energySlider" min="0" max="100" value="50" data-toggle="tooltip" title="Slide to adjust the relative availability of either solar panels or wind turbines around your location.">
+        <input type="range" class="form-control-range" id="energySlider" min="0" max="100" value="50" data-toggle="tooltip" title="Slide to adjust the relative availability of solar panels vs. wind turbines.">
         <small class="form-text" data-toggle="tooltip" title="Adjusting this slider updates the renewable energy quality calculation.">Adjust the slider to set the weighting between solar panel availability vs wind turbines.</small>
       </div>
       <div id="mergedGraph" data-toggle="tooltip" title="Interactive graph showing weather forecast, renewable energy quality, and plug schedules."></div>
@@ -323,8 +188,7 @@
             <label class="form-check-label" for="userPlanned">User Planned</label>
           </div>
           <div class="form-check">
-            <!-- Optimized is default -->
-            <input class="form-check-input" type="radio" name="scheduleType" id="optimized" value="optimized" checked data-toggle="tooltip" title="Optimized (Weather-based): The plug's on-hour is shifted to the most renewable hour.">
+            <input class="form-check-input" type="radio" name="scheduleType" id="optimized" value="optimized" checked data-toggle="tooltip" title="Optimized (Weather-based): All plugs will follow the same optimized schedule as shown in the graph.">
             <label class="form-check-label" for="optimized">Optimized (Weather-based)</label>
           </div>
         </div>
@@ -346,13 +210,70 @@
         <button type="button" class="btn btn-info btn-block" id="updatePlugsBtn" data-toggle="tooltip" title="Click to update the plug schedules and recalculate the profit forecast.">Update Plug Schedules</button>
       </div>
     </div>
+    
+    <!-- Overview Sections (Moved to the Bottom) -->
+    <div class="mt-5">
+      <div class="row">
+        <div class="col-md-3">
+          <button class="btn btn-info btn-block overview-button" data-toggle="collapse" data-target="#dashboardOverview" aria-expanded="false" aria-controls="dashboardOverview">This Dashboard</button>
+          <div class="collapse" id="dashboardOverview">
+            <div class="overview-card">
+              <h5>This Dashboard</h5>
+              <p>
+                Our dashboard integrates real-time weather forecasts with smart plug scheduling. Monitor renewable energy trends and see how your devices are optimized.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <button class="btn btn-info btn-block overview-button" data-toggle="collapse" data-target="#profitOverview" aria-expanded="false" aria-controls="profitOverview">Your Profits</button>
+          <div class="collapse" id="profitOverview">
+            <div class="overview-card">
+              <h5>Your Profits</h5>
+              <p>
+                Compare your planned and optimized schedules to track energy savings and cost reductions, helping you see the benefits of smart scheduling.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <button class="btn btn-info btn-block overview-button" data-toggle="collapse" data-target="#recommendedDevices" aria-expanded="false" aria-controls="recommendedDevices">Recommended Devices</button>
+          <div class="collapse" id="recommendedDevices">
+            <div class="overview-card">
+              <h5>Recommended Devices</h5>
+              <p>
+                Discover which appliances benefit most from smart scheduling—like electric heaters, home battery systems, hot tubs, and fans.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <button class="btn btn-info btn-block overview-button" data-toggle="collapse" data-target="#userGuide" aria-expanded="false" aria-controls="userGuide">User Guide</button>
+          <div class="collapse" id="userGuide">
+            <div class="overview-card">
+              <h5>User Guide</h5>
+              <ol>
+                <li>Set Your Location</li>
+                <li>Retrieve Weather</li>
+                <li>Adjust Energy Slider</li>
+                <li>Add Your Smart Plug</li>
+                <li>Select Schedule Type</li>
+                <li>Review Profit Forecast</li>
+                <li>Save/Load Settings</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
   
-  <!-- Import jQuery and Bootstrap JS -->
+  <!-- jQuery and Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
   <script>
-    // Initialize Bootstrap tooltips
+    // Initialize tooltips
     $(function () {
       $('[data-toggle="tooltip"]').tooltip();
     });
@@ -1094,15 +1015,9 @@
       }
     }
     
-    document.getElementById('preventScreensaverToggle').addEventListener('change', function() {
+    document.getElementById('preventScreensaverToggle')?.addEventListener('change', function() {
       if (this.checked) { requestWakeLock(); }
       else { releaseWakeLock(); }
-    });
-    
-    document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'visible' && document.getElementById('preventScreensaverToggle').checked && !wakeLock) {
-        requestWakeLock();
-      }
     });
     
     document.getElementById('updatePlugsBtn').addEventListener('click', function() {
@@ -1119,16 +1034,7 @@
       return false;
     };
     
-    // Overall Settings: change font family and size on the fly.
-    document.getElementById('fontSelect').addEventListener('change', function() {
-      document.body.style.fontFamily = this.value;
-    });
-    
-    document.getElementById('fontSizeRange').addEventListener('input', function() {
-      const size = this.value + "px";
-      document.body.style.fontSize = size;
-      document.getElementById('fontSizeDisplay').innerText = size;
-    });
+    // Additional overall settings event listeners can be added here if needed.
   </script>
 </body>
 </html>
