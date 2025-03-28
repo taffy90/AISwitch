@@ -126,6 +126,48 @@
       border-radius: 8px;
       margin-bottom: 20px;
     }
+    /* Slider Thumb and Track Styling using CSS Variables */
+    input[type="range"] {
+      -webkit-appearance: none;
+      width: 100%;
+      background: transparent;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 20px;
+      width: 20px;
+      border-radius: 50%;
+      background: var(--thumb-color, #ffff00);
+      margin-top: -8px;
+      cursor: pointer;
+    }
+    input[type="range"]::-moz-range-thumb {
+      height: 20px;
+      width: 20px;
+      border-radius: 50%;
+      background: var(--thumb-color, #ffff00);
+      cursor: pointer;
+    }
+    input[type="range"]::-ms-thumb {
+      height: 20px;
+      width: 20px;
+      border-radius: 50%;
+      background: var(--thumb-color, #ffff00);
+      cursor: pointer;
+    }
+    /* Slider Track: the entire track uses the same color */
+    input[type="range"]::-webkit-slider-runnable-track {
+      height: 4px;
+      background: var(--thumb-color, #ffff00);
+    }
+    input[type="range"]::-moz-range-track {
+      height: 4px;
+      background: var(--thumb-color, #ffff00);
+    }
+    input[type="range"]::-ms-track {
+      height: 4px;
+      background: var(--thumb-color, #ffff00);
+    }
   </style>
 </head>
 <body>
@@ -157,11 +199,11 @@
     <div class="jumbotron bg-dark text-white" id="marketing">
       <h1>Welcome to Smart Plug Switcher</h1>
       <p>
-        Imagine if your home appliances could automatically adjust their schedules to use energy when it’s at its greenest. 
-        With Smart Plug Switcher, you can effortlessly set your devices—like your Electric (water) Heaters, Home Battery systems, Hot Tubs, and Fans—to run during peak solar or wind hours. This means lower energy bills, less strain on the power grid, and a smaller carbon footprint.
+        Imagine if your home appliances could automatically adjust their schedules to use energy when it’s at its greenest. With Smart Plug Switcher, you can effortlessly set your devices—like your Electric (water) Heaters, Home Battery systems, Hot Tubs, Fans, 
+        <a href="https://unboundsolar.com/solar-information/power-table?srsltid=AfmBOorWqW1Nq55yEx8AOuI2x0OWv-94g1V12WiayllWSbAY6vb7hG01" target="_blank" style="color: #00ff00; text-decoration: underline;">etc.</a>—to run during peak solar or wind hours. This means lower energy bills, less strain on the power grid, and a smaller carbon footprint.
       </p>
       <p>
-        To get started, all you need is a standard smart plug and an internet connection.
+        To get started, all you need is a <a href="https://en.wikipedia.org/wiki/Smart_plug" target="_blank" style="color: #00ff00; text-decoration: underline;">standard smart plug</a> and an internet connection.
       </p>
     </div>
     
@@ -196,9 +238,9 @@
       <h3>Weather & Renewable Energy Forecast</h3>
       <div class="form-group">
         <label for="energySlider">
-          My area has: <span id="sunWeightLabel">50</span>% Solar Panels / <span id="windWeightLabel">50</span>% Wind Turbines
+          My area has: <span id="sunWeightLabel">38</span>% Solar Panels / <span id="windWeightLabel">62</span>% Wind Turbines
         </label>
-        <input type="range" class="form-control-range" id="energySlider" min="0" max="100" value="50">
+        <input type="range" class="form-control-range" id="energySlider" min="0" max="100" value="38">
         <small class="form-text">
           Adjust the slider to set the weighting between solar panel availability vs wind turbines.
           (Upcoming: A regional database will automatically adjust this based on your location.)
@@ -292,6 +334,7 @@
                 <li>Electric Water Pumps</li>
                 <li>Irrigation Systems</li>
                 <li>Pool Pumps</li>
+                <li><a href="https://unboundsolar.com/solar-information/power-table?srsltid=AfmBOorWqW1Nq55yEx8AOuI2x0OWv-94g1V12WiayllWSbAY6vb7hG01" target="_blank" style="color: #00ff00; text-decoration: underline;">etc.</a></li>
               </ul>
             </div>
           </div>
@@ -325,6 +368,20 @@
     // Initialize tooltips
     $(function () {
       $('[data-toggle="tooltip"]').tooltip();
+    });
+    
+    // Auto-scroll for anchor links (e.g., clicking "etc." in marketing text)
+    $('a[href^="https://unboundsolar.com/solar-information/power-table"]').on('click', function(e) {
+      // Open in new tab and also scroll down if needed (or just open new tab)
+      // If you want to scroll the page to Recommended Devices instead,
+      // change the href to "#recommendedDevices" instead.
+    });
+    
+    // Auto-scroll when an overview collapse element is shown
+    $('.collapse').on('shown.bs.collapse', function () {
+      $('html, body').animate({
+        scrollTop: $(this).offset().top - 50
+      }, 800);
     });
     
     /*************************************
@@ -599,6 +656,16 @@
       const sliderValue = parseInt(this.value, 10);
       document.getElementById('sunWeightLabel').textContent = sliderValue;
       document.getElementById('windWeightLabel').textContent = 100 - sliderValue;
+      
+      // Compute thumb and track color: 0 => blue (0,0,255), 100 => yellow (255,255,0)
+      const r = Math.round((sliderValue / 100) * 255);
+      const g = Math.round((sliderValue / 100) * 255);
+      const b = Math.round(255 - (sliderValue / 100) * 255);
+      const thumbColor = `rgb(${r},${g},${b})`;
+      this.style.setProperty('--thumb-color', thumbColor);
+      // Set the entire track background to the same color
+      this.style.background = `linear-gradient(to right, ${thumbColor} 0%, ${thumbColor} 100%)`;
+      
       if (!weatherTimeData || !weatherWindData || !weatherUvData) return;
       const weight = sliderValue / 100;
       const newRenewable = weatherTimeData.map((_, i) => weight * parseFloat(weatherUvData[i]) + (1 - weight) * parseFloat(weatherWindData[i]));
@@ -608,6 +675,18 @@
         checkPlugStates();
         updateProfitInfographic();
       }
+    });
+    
+    // Set initial slider track color on page load
+    window.addEventListener("load", function() {
+      var slider = document.getElementById('energySlider');
+      var initialValue = parseInt(slider.value, 10);
+      const r = Math.round((initialValue / 100) * 255);
+      const g = Math.round((initialValue / 100) * 255);
+      const b = Math.round(255 - (initialValue / 100) * 255);
+      const thumbColor = `rgb(${r},${g},${b})`;
+      slider.style.setProperty('--thumb-color', thumbColor);
+      slider.style.background = `linear-gradient(to right, ${thumbColor} 0%, ${thumbColor} 100%)`;
     });
     
     document.querySelectorAll('input[name="scheduleType"]').forEach(radio => {
@@ -721,33 +800,35 @@
         </div>
         <div class="form-row">
           <div class="col">
-            <input type="number" class="form-control plugOnHours" placeholder="On Hours" min="0" value="${plugData ? plugData.onHours : 4}" title="Enter the number of hours this plug should be ON per cycle.">
-            <small class="form-text">Number of hours this plug should be ON per cycle (e.g., 1 if the plug is on for one hour per day).</small>
+            <input type="number" class="form-control plugOnHours" placeholder="On Hours" min="0" value="${plugData ? plugData.onHours : 3}" title="Enter the number of hours this plug should be ON per cycle.">
+            <small class="form-text">Number of hours this plug should be ON per cycle (e.g., 3 if the plug is on for three hours per cycle).</small>
           </div>
           <div class="col">
-            <input type="number" class="form-control plugTotalHours" placeholder="Total Hours" min="1" value="${plugData ? plugData.totalHours : 7}" title="Enter the total number of hours in each cycle (e.g., 7 for a 7‑hour cycle).">
-            <small class="form-text">Total hours in each cycle (e.g., 7 hours).</small>
+            <input type="number" class="form-control plugTotalHours" placeholder="Total Hours" min="1" value="${plugData ? plugData.totalHours : 6}" title="Enter the total number of hours in each cycle (e.g., 6 for a 6‑hour cycle).">
+            <small class="form-text">Total hours in each cycle (e.g., 6 hours).</small>
           </div>
           <div class="col">
-            <input type="number" class="form-control plugKwh" placeholder="kWh" min="0" value="${plugData ? plugData.kwh : 1}" title="Enter the device power consumption (in kWh).">
+            <input type="number" step="0.1" class="form-control plugKwh" placeholder="kWh" min="0" value="${plugData ? plugData.kwh : 1.5}" title="Enter the device power consumption (in kWh).">
             <small class="form-text">Power consumption in kWh when the plug is ON (e.g., 1.5).</small>
           </div>
         </div>
         <div class="form-group mt-2">
           <input type="text" class="form-control webhookOn" placeholder="Webhook URL for ON" value="${plugData ? plugData.webhookOn : ""}">
           <small class="form-text">
-            A webhook is a simple internet request that tells your smart plug to turn ON.
-            You can set this up using services like <a href="https://ifttt.com/maker_webhooks" target="_blank">IFTTT Webhooks</a> or 
-            <a href="https://www.home-assistant.io/integrations/webhook/" target="_blank">Home Assistant</a>.
+            A webhook is a simple internet request that tells your smart plug to turn <strong>ON</strong>.
+            You can set this up using services like 
+            <a href="https://ifttt.com/maker_webhooks" target="_blank" style="color: #00ff00; text-decoration: underline;">IFTTT Webhooks</a> or 
+            <a href="https://www.home-assistant.io/integrations/webhook/" target="_blank" style="color: #00ff00; text-decoration: underline;">Home Assistant</a>.
           </small>
           <button type="button" class="btn btn-sm btn-secondary testWebhookOn mt-1" title="Click to test the ON webhook.">Test ON Webhook</button>
         </div>
         <div class="form-group">
           <input type="text" class="form-control webhookOff" placeholder="Webhook URL for OFF" value="${plugData ? plugData.webhookOff : ""}">
           <small class="form-text">
-            A webhook is a simple internet request that tells your smart plug to turn OFF.
-            You can set this up using services like <a href="https://ifttt.com/maker_webhooks" target="_blank">IFTTT Webhooks</a> or 
-            <a href="https://www.home-assistant.io/integrations/webhook/" target="_blank">Home Assistant</a>.
+            A webhook is a simple internet request that tells your smart plug to turn <strong>OFF</strong>.
+            You can set this up using services like 
+            <a href="https://ifttt.com/maker_webhooks" target="_blank" style="color: #00ff00; text-decoration: underline;">IFTTT Webhooks</a> or 
+            <a href="https://www.home-assistant.io/integrations/webhook/" target="_blank" style="color: #00ff00; text-decoration: underline;">Home Assistant</a>.
           </small>
           <button type="button" class="btn btn-sm btn-secondary testWebhookOff mt-1" title="Click to test the OFF webhook.">Test OFF Webhook</button>
         </div>
