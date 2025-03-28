@@ -183,60 +183,63 @@
     <form id="locationForm">
       <div class="form-group">
         <input type="text" class="form-control" id="manualLocation" placeholder="Enter village or city name" required data-toggle="tooltip" title="Type your village or city name here.">
-        <small class="form-text" data-toggle="tooltip" title="Your village or city name will be used to fetch weather data.">Type the name of your village or city to fetch coordinates and weather.</small>
+        <small class="form-text">Type the name of your village or city to fetch coordinates and weather.</small>
       </div>
       <div id="timerContainer">
-        <button type="submit" class="btn btn-secondary" data-toggle="tooltip" title="Click to retrieve weather data for your location.">Retrieve Weather</button>
+        <button type="submit" class="btn btn-secondary">Retrieve Weather</button>
       </div>
     </form>
-    <div id="manualLocationResult" class="mt-3" data-toggle="tooltip" title="This area shows the results of your manual location search."></div>
+    <div id="manualLocationResult" class="mt-3"></div>
     
     <!-- Forecast Section -->
     <div id="forecastSection" class="mt-5">
-      <h3 data-toggle="tooltip" title="This section displays the weather forecast and renewable energy quality.">Weather & Renewable Energy Forecast</h3>
+      <h3>Weather & Renewable Energy Forecast</h3>
       <div class="form-group">
-        <label for="energySlider" data-toggle="tooltip" title="Adjust the slider to balance solar panels vs. wind turbines in your area.">
+        <label for="energySlider">
           My area has: <span id="sunWeightLabel">50</span>% Solar Panels / <span id="windWeightLabel">50</span>% Wind Turbines
         </label>
-        <input type="range" class="form-control-range" id="energySlider" min="0" max="100" value="50" data-toggle="tooltip" title="Slide to adjust the relative availability of solar panels vs. wind turbines.">
-        <small class="form-text" data-toggle="tooltip" title="Upcoming: A regional database of available solar panels and wind turbines will automatically adjust this slider based on your location.">
+        <input type="range" class="form-control-range" id="energySlider" min="0" max="100" value="50">
+        <small class="form-text">
           Adjust the slider to set the weighting between solar panel availability vs wind turbines.
+          (Upcoming: A regional database will automatically adjust this based on your location.)
         </small>
       </div>
-      <div id="mergedGraph" data-toggle="tooltip" title="Interactive graph showing weather forecast, renewable energy quality, and plug schedules."></div>
+      <div id="mergedGraph"></div>
     </div>
     
     <!-- Smart Plug Settings Section -->
     <div id="smartPlugSettingsSection" class="mt-5">
-      <h3 class="text-center" data-toggle="tooltip" title="Configure your smart plug settings below.">Smart Plug Settings</h3>
+      <h3 class="text-center">Smart Plug Settings</h3>
       <div class="row">
         <div class="col-md-6">
-          <label data-toggle="tooltip" title="Select your preferred scheduling method.">Schedule Type:</label>
+          <label>Select your preferred scheduling method:</label>
           <div class="form-check">
-            <input class="form-check-input" type="radio" name="scheduleType" id="userPlanned" value="user" data-toggle="tooltip" title="User Planned: Your plug will be on at the times you specified.">
+            <input class="form-check-input" type="radio" name="scheduleType" id="userPlanned" value="user">
             <label class="form-check-label" for="userPlanned">User Planned</label>
           </div>
           <div class="form-check">
-            <input class="form-check-input" type="radio" name="scheduleType" id="optimized" value="optimized" checked data-toggle="tooltip" title="Optimized (Weather-based): All plugs will follow the same optimized schedule as shown in the graph.">
+            <input class="form-check-input" type="radio" name="scheduleType" id="optimized" value="optimized" checked>
             <label class="form-check-label" for="optimized">Optimized (Weather-based)</label>
           </div>
         </div>
         <div class="col-md-6">
           <div class="card bg-dark text-white">
             <div class="card-body text-center">
-              <h5 class="card-title" data-toggle="tooltip" title="This shows the total energy (in kWh) rescheduled to renewables over the forecast period.">The Profit Forecast</h5>
-              <div id="profitInfographicValue" data-toggle="tooltip" title="This value updates dynamically as your plug schedules change.">
+              <h5 class="card-title">The Profit Forecast</h5>
+              <div id="profitInfographicValue">
                 <p>0.00 kWh</p>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div id="plugSchedulePanel" data-toggle="tooltip" title="Configure each smart plug's settings below.">
+      <div id="plugSchedulePanel">
         <div id="plugList"></div>
-        <button type="button" class="btn btn-outline-secondary mb-2" id="addPlugBtn" data-toggle="tooltip" title="Click to add a new smart plug configuration.">Add Plug</button>
-        <small class="form-text mb-2" data-toggle="tooltip" title="Click 'Add Plug' and then fill in the details for each plug.">Click "Add Plug" to add a new smart plug. Fill in the details below for each plug.</small>
-        <button type="button" class="btn btn-info btn-block" id="updatePlugsBtn" data-toggle="tooltip" title="Click to update the plug schedules and recalculate the profit forecast.">Update Plug Schedules</button>
+        <button type="button" class="btn btn-outline-secondary mb-2" id="addPlugBtn">Add Plug</button>
+        <small class="form-text mb-2">
+          Click "Add Plug" to add a new smart plug. Fill in the details below for each plug.
+        </small>
+        <button type="button" class="btn btn-info btn-block" id="updatePlugsBtn">Update Plug Schedules</button>
       </div>
     </div>
     
@@ -714,41 +717,49 @@
       plugDiv.innerHTML = `
         <div class="form-group">
           <input type="text" class="form-control plugName" placeholder="Plug Name" value="${plugData ? plugData.name : "Plug " + plugIndex}" data-toggle="tooltip" title="Enter a unique name for this plug.">
-          <small class="form-text" data-toggle="tooltip" title="This name helps you identify the plug.">Enter a unique name for this smart plug.</small>
+          <small class="form-text">Enter a unique name for this smart plug.</small>
         </div>
         <div class="form-row">
           <div class="col">
             <input type="number" class="form-control plugOnHours" placeholder="On Hours" min="0" value="${plugData ? plugData.onHours : 4}" data-toggle="tooltip" title="Enter the number of hours this plug should be ON per cycle.">
-            <small class="form-text" data-toggle="tooltip" title="Example: 1 if the plug is on for one hour per day.">Number of hours this plug should be ON per cycle.</small>
+            <small class="form-text">Number of hours this plug should be ON per cycle (e.g., 1 if the plug is on for one hour per day).</small>
           </div>
           <div class="col">
             <input type="number" class="form-control plugTotalHours" placeholder="Total Hours" min="1" value="${plugData ? plugData.totalHours : 7}" data-toggle="tooltip" title="Enter the total number of hours in each cycle (e.g., 7 for a 7‑hour cycle).">
-            <small class="form-text" data-toggle="tooltip" title="This sets the length of each cycle.">Total hours in each cycle (e.g., 7 hours).</small>
+            <small class="form-text">Total hours in each cycle (e.g., 7 hours).</small>
           </div>
           <div class="col">
             <input type="number" class="form-control plugKwh" placeholder="kWh" min="0" value="${plugData ? plugData.kwh : 1}" data-toggle="tooltip" title="Enter the device power consumption (in kWh).">
-            <small class="form-text" data-toggle="tooltip" title="Example: 1.5 if the device uses 1.5 kWh when ON.">Power consumption in kWh when the plug is ON.</small>
+            <small class="form-text">Power consumption in kWh when the plug is ON (e.g., 1.5).</small>
           </div>
         </div>
         <div class="form-group mt-2">
-          <input type="text" class="form-control webhookOn" placeholder="Webhook URL for ON" value="${plugData ? plugData.webhookOn : ""}" data-toggle="tooltip" title="Enter the URL that triggers turning the plug ON.">
-          <small class="form-text" data-toggle="tooltip" title="This webhook is called to switch the plug on.">Enter the webhook URL to turn this plug ON.</small>
+          <input type="text" class="form-control webhookOn" placeholder="Webhook URL for ON" value="${plugData ? plugData.webhookOn : ""}">
+          <small class="form-text">
+            A webhook is a simple internet request that tells your smart plug to turn ON.
+            You can set this up using services like <a href="https://ifttt.com" target="_blank">IFTTT</a> or 
+            <a href="https://www.home-assistant.io/integrations/webhook/" target="_blank">Home Assistant</a>.
+          </small>
           <button type="button" class="btn btn-sm btn-secondary testWebhookOn mt-1" data-toggle="tooltip" title="Click to test the ON webhook.">Test ON Webhook</button>
         </div>
         <div class="form-group">
-          <input type="text" class="form-control webhookOff" placeholder="Webhook URL for OFF" value="${plugData ? plugData.webhookOff : ""}" data-toggle="tooltip" title="Enter the URL that triggers turning the plug OFF.">
-          <small class="form-text" data-toggle="tooltip" title="This webhook is called to switch the plug off.">Enter the webhook URL to turn this plug OFF.</small>
+          <input type="text" class="form-control webhookOff" placeholder="Webhook URL for OFF" value="${plugData ? plugData.webhookOff : ""}">
+          <small class="form-text">
+            A webhook is a simple internet request that tells your smart plug to turn OFF.
+            You can set this up using services like <a href="https://ifttt.com" target="_blank">IFTTT</a> or 
+            <a href="https://www.home-assistant.io/integrations/webhook/" target="_blank">Home Assistant</a>.
+          </small>
           <button type="button" class="btn btn-sm btn-secondary testWebhookOff mt-1" data-toggle="tooltip" title="Click to test the OFF webhook.">Test OFF Webhook</button>
         </div>
         <button type="button" class="btn btn-danger btn-sm deletePlug" data-toggle="tooltip" title="Click to remove this plug configuration.">Delete Plug</button>
-        <div class="plugStatus" style="margin-top:5px;" data-toggle="tooltip" title="This displays the current status of the plug.">Status: UNKNOWN</div>
-        <button class="btn btn-sm btn-info mt-2 toggleAdvancedSettings" type="button" data-toggle="collapse" data-target="#advancedSettings-${plugIndex}" data-toggle="tooltip" title="Click to view advanced settings for this plug.">Toggle Advanced Settings</button>
+        <div class="plugStatus" style="margin-top:5px;">Status: UNKNOWN</div>
+        <button class="btn btn-sm btn-info mt-2 toggleAdvancedSettings" type="button" data-toggle="collapse" data-target="#advancedSettings-${plugIndex}" title="Click to view advanced settings for this plug.">Toggle Advanced Settings</button>
         <div class="collapse plugAdvancedSettings" id="advancedSettings-${plugIndex}">
           <div class="forcedScheduleSection mt-2">
             <h5>Forced Schedule Settings</h5>
             <div class="forcedRulesContainer"></div>
-            <button type="button" class="btn btn-secondary btn-sm addForcedRule" data-toggle="tooltip" title="Click to add a forced rule for this plug.">Add Forced Rule</button>
-            <small class="form-text" data-toggle="tooltip" title="Forced rules override the computed schedule at specified times.">Define forced on/off rules (select multiple days if needed, and set the same hours for them).</small>
+            <button type="button" class="btn btn-secondary btn-sm addForcedRule" title="Click to add a forced rule for this plug.">Add Forced Rule</button>
+            <small class="form-text">Define forced on/off rules (select multiple days if needed, and set the same hours for them).</small>
           </div>
           <div class="historyLogSection mt-3">
             <h5>History Log</h5>
@@ -791,7 +802,7 @@
         ruleDiv.innerHTML = `
           <div class="col-4">
             <label>Days:</label>
-            <select class="form-control forcedRuleDays" multiple size="3" data-toggle="tooltip" title="Select the days this rule applies to.">
+            <select class="form-control forcedRuleDays" multiple size="3" title="Select the days this rule applies to.">
               <option value="Mon">Mon</option>
               <option value="Tue">Tue</option>
               <option value="Wed">Wed</option>
@@ -803,21 +814,21 @@
           </div>
           <div class="col-3">
             <label>Start Time:</label>
-            <input type="time" class="form-control forcedRuleStart" value="08:00" data-toggle="tooltip" title="Set the start time for this rule.">
+            <input type="time" class="form-control forcedRuleStart" value="08:00" title="Set the start time for this rule.">
           </div>
           <div class="col-3">
             <label>End Time:</label>
-            <input type="time" class="form-control forcedRuleEnd" value="09:00" data-toggle="tooltip" title="Set the end time for this rule.">
+            <input type="time" class="form-control forcedRuleEnd" value="09:00" title="Set the end time for this rule.">
           </div>
           <div class="col-2">
             <label>State:</label>
-            <select class="form-control forcedRuleState" data-toggle="tooltip" title="Choose whether to force the plug ON or OFF during this time interval.">
+            <select class="form-control forcedRuleState" title="Choose whether to force the plug ON or OFF during this time interval.">
               <option value="on">ON</option>
               <option value="off">OFF</option>
             </select>
           </div>
           <div class="col-12">
-            <button type="button" class="btn btn-danger btn-sm removeForcedRule mt-1" data-toggle="tooltip" title="Click to remove this rule.">Remove Rule</button>
+            <button type="button" class="btn btn-danger btn-sm removeForcedRule mt-1" title="Click to remove this rule.">Remove Rule</button>
           </div>
         `;
         container.appendChild(ruleDiv);
@@ -834,7 +845,7 @@
           ruleDiv.innerHTML = `
             <div class="col-4">
               <label>Days:</label>
-              <select class="form-control forcedRuleDays" multiple size="3" data-toggle="tooltip" title="Select the days this rule applies to.">
+              <select class="form-control forcedRuleDays" multiple size="3" title="Select the days this rule applies to.">
                 <option value="Mon">Mon</option>
                 <option value="Tue">Tue</option>
                 <option value="Wed">Wed</option>
@@ -846,21 +857,21 @@
             </div>
             <div class="col-3">
               <label>Start Time:</label>
-              <input type="time" class="form-control forcedRuleStart" value="${rule.start}" data-toggle="tooltip" title="Start time for this rule.">
+              <input type="time" class="form-control forcedRuleStart" value="${rule.start}" title="Start time for this rule.">
             </div>
             <div class="col-3">
               <label>End Time:</label>
-              <input type="time" class="form-control forcedRuleEnd" value="${rule.end}" data-toggle="tooltip" title="End time for this rule.">
+              <input type="time" class="form-control forcedRuleEnd" value="${rule.end}" title="End time for this rule.">
             </div>
             <div class="col-2">
               <label>State:</label>
-              <select class="form-control forcedRuleState" data-toggle="tooltip" title="Force the plug ON or OFF during this period.">
+              <select class="form-control forcedRuleState" title="Force the plug ON or OFF during this period.">
                 <option value="on" ${rule.state === "on" ? "selected" : ""}>ON</option>
                 <option value="off" ${rule.state === "off" ? "selected" : ""}>OFF</option>
               </select>
             </div>
             <div class="col-12">
-              <button type="button" class="btn btn-danger btn-sm removeForcedRule mt-1" data-toggle="tooltip" title="Remove this rule.">Remove Rule</button>
+              <button type="button" class="btn btn-danger btn-sm removeForcedRule mt-1" title="Remove this rule.">Remove Rule</button>
             </div>
           `;
           container.appendChild(ruleDiv);
