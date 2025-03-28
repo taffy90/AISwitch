@@ -175,14 +175,14 @@
     </div>
 
     <!-- Location Display and Manual Input -->
-    <div id="locationDisplay" class="mt-3" data-toggle="tooltip" title="This area displays your current location information.">
+    <div id="locationDisplay" class="mt-3">
       <p>Location will appear here when retrieved.</p>
     </div>
-    <button id="getGeoBtn" class="btn btn-primary mb-3" data-toggle="tooltip" title="Click to automatically retrieve your location.">Get Geolocation Automatically</button>
-    <h2 class="mt-5" data-toggle="tooltip" title="Enter your village or city to get the weather forecast.">Enter Location Manually</h2>
+    <button id="getGeoBtn" class="btn btn-primary mb-3">Get Geolocation Automatically</button>
+    <h2 class="mt-5">Enter Location Manually</h2>
     <form id="locationForm">
       <div class="form-group">
-        <input type="text" class="form-control" id="manualLocation" placeholder="Enter village or city name" required data-toggle="tooltip" title="Type your village or city name here.">
+        <input type="text" class="form-control" id="manualLocation" placeholder="Enter village or city name" required>
         <small class="form-text">Type the name of your village or city to fetch coordinates and weather.</small>
       </div>
       <div id="timerContainer">
@@ -716,20 +716,20 @@
       plugDiv.className = 'plugEntry';
       plugDiv.innerHTML = `
         <div class="form-group">
-          <input type="text" class="form-control plugName" placeholder="Plug Name" value="${plugData ? plugData.name : "Plug " + plugIndex}" data-toggle="tooltip" title="Enter a unique name for this plug.">
+          <input type="text" class="form-control plugName" placeholder="Plug Name" value="${plugData ? plugData.name : "Plug " + plugIndex}" title="Enter a unique name for this plug.">
           <small class="form-text">Enter a unique name for this smart plug.</small>
         </div>
         <div class="form-row">
           <div class="col">
-            <input type="number" class="form-control plugOnHours" placeholder="On Hours" min="0" value="${plugData ? plugData.onHours : 4}" data-toggle="tooltip" title="Enter the number of hours this plug should be ON per cycle.">
+            <input type="number" class="form-control plugOnHours" placeholder="On Hours" min="0" value="${plugData ? plugData.onHours : 4}" title="Enter the number of hours this plug should be ON per cycle.">
             <small class="form-text">Number of hours this plug should be ON per cycle (e.g., 1 if the plug is on for one hour per day).</small>
           </div>
           <div class="col">
-            <input type="number" class="form-control plugTotalHours" placeholder="Total Hours" min="1" value="${plugData ? plugData.totalHours : 7}" data-toggle="tooltip" title="Enter the total number of hours in each cycle (e.g., 7 for a 7‑hour cycle).">
+            <input type="number" class="form-control plugTotalHours" placeholder="Total Hours" min="1" value="${plugData ? plugData.totalHours : 7}" title="Enter the total number of hours in each cycle (e.g., 7 for a 7‑hour cycle).">
             <small class="form-text">Total hours in each cycle (e.g., 7 hours).</small>
           </div>
           <div class="col">
-            <input type="number" class="form-control plugKwh" placeholder="kWh" min="0" value="${plugData ? plugData.kwh : 1}" data-toggle="tooltip" title="Enter the device power consumption (in kWh).">
+            <input type="number" class="form-control plugKwh" placeholder="kWh" min="0" value="${plugData ? plugData.kwh : 1}" title="Enter the device power consumption (in kWh).">
             <small class="form-text">Power consumption in kWh when the plug is ON (e.g., 1.5).</small>
           </div>
         </div>
@@ -737,21 +737,21 @@
           <input type="text" class="form-control webhookOn" placeholder="Webhook URL for ON" value="${plugData ? plugData.webhookOn : ""}">
           <small class="form-text">
             A webhook is a simple internet request that tells your smart plug to turn ON.
-            You can set this up using services like <a href="https://ifttt.com" target="_blank">IFTTT</a> or 
+            You can set this up using services like <a href="https://ifttt.com/maker_webhooks" target="_blank">IFTTT Webhooks</a> or 
             <a href="https://www.home-assistant.io/integrations/webhook/" target="_blank">Home Assistant</a>.
           </small>
-          <button type="button" class="btn btn-sm btn-secondary testWebhookOn mt-1" data-toggle="tooltip" title="Click to test the ON webhook.">Test ON Webhook</button>
+          <button type="button" class="btn btn-sm btn-secondary testWebhookOn mt-1" title="Click to test the ON webhook.">Test ON Webhook</button>
         </div>
         <div class="form-group">
           <input type="text" class="form-control webhookOff" placeholder="Webhook URL for OFF" value="${plugData ? plugData.webhookOff : ""}">
           <small class="form-text">
             A webhook is a simple internet request that tells your smart plug to turn OFF.
-            You can set this up using services like <a href="https://ifttt.com" target="_blank">IFTTT</a> or 
+            You can set this up using services like <a href="https://ifttt.com/maker_webhooks" target="_blank">IFTTT Webhooks</a> or 
             <a href="https://www.home-assistant.io/integrations/webhook/" target="_blank">Home Assistant</a>.
           </small>
-          <button type="button" class="btn btn-sm btn-secondary testWebhookOff mt-1" data-toggle="tooltip" title="Click to test the OFF webhook.">Test OFF Webhook</button>
+          <button type="button" class="btn btn-sm btn-secondary testWebhookOff mt-1" title="Click to test the OFF webhook.">Test OFF Webhook</button>
         </div>
-        <button type="button" class="btn btn-danger btn-sm deletePlug" data-toggle="tooltip" title="Click to remove this plug configuration.">Delete Plug</button>
+        <button type="button" class="btn btn-danger btn-sm deletePlug" title="Click to remove this plug configuration.">Delete Plug</button>
         <div class="plugStatus" style="margin-top:5px;">Status: UNKNOWN</div>
         <button class="btn btn-sm btn-info mt-2 toggleAdvancedSettings" type="button" data-toggle="collapse" data-target="#advancedSettings-${plugIndex}" title="Click to view advanced settings for this plug.">Toggle Advanced Settings</button>
         <div class="collapse plugAdvancedSettings" id="advancedSettings-${plugIndex}">
