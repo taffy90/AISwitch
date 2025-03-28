@@ -62,7 +62,9 @@
       overflow: hidden;
       margin-bottom: 2rem;
     }
-    .video-container iframe, .video-container object, .video-container embed {
+    .video-container iframe,
+    .video-container object,
+    .video-container embed {
       position: absolute;
       top: 0;
       left: 0;
@@ -418,24 +420,37 @@
       if (address.country) { displayText += `<br>Country: ${address.country}`; }
       document.getElementById('locationDisplay').innerHTML = `<p>${displayText}</p>`;
       const manualField = document.getElementById('manualLocation');
-      if (!manualField.value && place) { manualField.value = place; }
+      // Automatically fill the manual location field and trigger weather retrieval if a place is found.
+      if (place) { 
+        manualField.value = place; 
+        document.getElementById("locationForm").dispatchEvent(new Event('submit'));
+      }
     }
     
     function getGeoLocation() {
       const locationDisplay = document.getElementById('locationDisplay');
       locationDisplay.innerHTML = '<p>Retrieving your location...</p>';
       if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-          const latitude = position.coords.latitude;
-          const longitude = position.coords.longitude;
-          const reverseUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1`;
-          fetch(reverseUrl)
-            .then(response => response.json())
-            .then(data => { setLocationDisplay(data, latitude, longitude); })
-            .catch(error => { locationDisplay.innerHTML = `<p>Your coordinates: Latitude: ${latitude.toFixed(4)}, Longitude: ${longitude.toFixed(4)}</p>`; });
-        }, function(error) { locationDisplay.innerHTML = `<p>Error getting location: ${error.message}</p>`; });
+        navigator.geolocation.getCurrentPosition(
+          function(position) {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+            const reverseUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1`;
+            fetch(reverseUrl)
+              .then(response => response.json())
+              .then(data => { 
+                setLocationDisplay(data, latitude, longitude);
+              })
+              .catch(error => { 
+                locationDisplay.innerHTML = `<p>Your coordinates: Latitude: ${latitude.toFixed(4)}, Longitude: ${longitude.toFixed(4)}. Reverse geocoding failed. Please enter your location manually.</p>`; 
+              });
+          },
+          function(error) {
+            locationDisplay.innerHTML = `<p>Error getting location: ${error.message}. Please enter your location manually.</p>`;
+          }
+        );
       } else {
-        locationDisplay.innerHTML = '<p>Geolocation is not supported by this browser.</p>';
+        locationDisplay.innerHTML = '<p>Geolocation is not supported by this browser. Please enter your location manually.</p>';
       }
     }
     
