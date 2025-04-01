@@ -38,18 +38,6 @@
     .navbar-custom .nav-link:hover {
       color: #007bff;
     }
-    /* Light mode overrides */
-    .light-mode {
-      background-color: #ffffff !important;
-      color: #333 !important;
-    }
-    .light-mode .navbar-custom {
-      background-color: #ffffff !important;
-    }
-    .light-mode .navbar-custom .nav-link,
-    .light-mode .navbar-custom .navbar-brand {
-      color: #333 !important;
-    }
     /* Jumbotron styled as a modern card */
     .jumbotron {
       padding: 2rem 1rem;
@@ -147,6 +135,22 @@
       border: 1px solid #e0e0e0;
       box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
+    /* Pricing Tier Table */
+    #tierTable {
+      margin-top: 40px;
+    }
+    #tierTable th, #tierTable td {
+      text-align: center;
+      vertical-align: middle;
+    }
+    #tierTable td:first-child {
+      text-align: left;
+      font-weight: 500;
+    }
+    .feature-note {
+      font-size: 0.85rem;
+      color: #666;
+    }
     /* Slider Thumb and Track Styling using CSS Variables */
     input[type="range"] {
       -webkit-appearance: none;
@@ -207,8 +211,9 @@
           <strong id="timerLabelCollapse">Next Forecast:</strong> <span id="refreshTimer"></span>
         </div>
         <div class="d-flex justify-content-between">
-          <button class="btn btn-success btn-sm" id="saveSettingsBtn" title="Save your current configuration.">Save Settings</button>
-          <button class="btn btn-warning btn-sm" id="loadSettingsBtn" title="Load your previously saved configuration.">Load Settings</button>
+          <!-- Use type="button" so they don't trigger form submission -->
+          <button type="button" class="btn btn-success btn-sm" id="saveSettingsBtn" title="Save your current configuration.">Save Settings</button>
+          <button type="button" class="btn btn-warning btn-sm" id="loadSettingsBtn" title="Load your previously saved configuration.">Load Settings</button>
         </div>
       </div>
     </div>
@@ -312,6 +317,157 @@
       </div>
     </div>
     
+    <!-- Pricing Tiers Section -->
+    <div id="tierSection" class="mt-5">
+      <h3 class="text-center">Pricing Tiers</h3>
+      <table id="tierTable" class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Free</th>
+            <th>Standard</th>
+            <th>Professional</th>
+            <th>Enterprise</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Basic Scheduling<br><span class="feature-note">(24-hour horizon)</span></td>
+            <td>X</td>
+            <td>X</td>
+            <td>X</td>
+            <td>X</td>
+          </tr>
+          <tr>
+            <td>Extended Scheduling<br><span class="feature-note">(Up to 72 hours)</span></td>
+            <td></td>
+            <td>X</td>
+            <td>X</td>
+            <td>X</td>
+          </tr>
+          <tr>
+            <td>Long-term Scheduling<br><span class="feature-note">(7-14 days)</span></td>
+            <td></td>
+            <td></td>
+            <td>X</td>
+            <td>X</td>
+          </tr>
+          <tr>
+            <td>Unlimited Scheduling<br><span class="feature-note">(16+ days or more)</span></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>X</td>
+          </tr>
+          <tr>
+            <td>Basic Weather Integration<br><span class="feature-note">(Wind & Solar)</span></td>
+            <td>X</td>
+            <td>X</td>
+            <td>X</td>
+            <td>X</td>
+          </tr>
+          <tr>
+            <td>Advanced Weather Integration<br><span class="feature-note">(Extended Forecast)</span></td>
+            <td></td>
+            <td>X</td>
+            <td>X</td>
+            <td>X</td>
+          </tr>
+          <tr>
+            <td>Minute-level Scheduling<br><span class="feature-note">(Plan in minutes instead of hours)</span></td>
+            <td></td>
+            <td>X</td>
+            <td>X</td>
+            <td>X</td>
+          </tr>
+          <tr>
+            <td>Weather Refresh Frequency<br><span class="feature-note">(Free/Standard: 1 hr; Professional/Enterprise: 1 min)</span></td>
+            <td>1 hr</td>
+            <td>1 hr</td>
+            <td>1 min</td>
+            <td>1 min / Custom</td>
+          </tr>
+          <tr>
+            <td>AI-Driven Adaptive Scheduling</td>
+            <td></td>
+            <td></td>
+            <td>X</td>
+            <td>X</td>
+          </tr>
+          <tr>
+            <td>Advanced Analytics & Reporting</td>
+            <td></td>
+            <td></td>
+            <td>X</td>
+            <td>X</td>
+          </tr>
+          <tr>
+            <td>API Access for Integration</td>
+            <td></td>
+            <td></td>
+            <td>X</td>
+            <td>X</td>
+          </tr>
+          <tr>
+            <td>Smart Plug Capacity<br><span class="feature-note">(Free: 3 / Standard: 10 / Professional: 50 / Enterprise: Unlimited)</span></td>
+            <td>3</td>
+            <td>10</td>
+            <td>50</td>
+            <td>Unlimited</td>
+          </tr>
+          <tr>
+            <td>Integration with IFTTT / Home Assistant</td>
+            <td></td>
+            <td>X</td>
+            <td>X</td>
+            <td>X</td>
+          </tr>
+          <tr>
+            <td>Basic Community Support</td>
+            <td>X</td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Enhanced Support (Email/Chat)</td>
+            <td></td>
+            <td>X</td>
+            <td>X</td>
+            <td>X</td>
+          </tr>
+          <tr>
+            <td>24/7 Dedicated Support & SLA</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>X</td>
+          </tr>
+          <tr>
+            <td>White-Label & Custom Branding</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>X</td>
+          </tr>
+          <tr>
+            <td>Custom Integration & Consultation</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>X</td>
+          </tr>
+          <tr>
+            <td>Volume Discounts & Tailored Procurement</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>X</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
     <!-- Overview Sections (Moved to the Bottom) -->
     <div class="mt-5">
       <div class="row">
@@ -396,13 +552,6 @@
     // Initialize tooltips
     $(function () {
       $('[data-toggle="tooltip"]').tooltip();
-    });
-    
-    // Auto-scroll for anchor links (e.g., clicking "etc." in marketing text)
-    $('a[href^="https://unboundsolar.com/solar-information/power-table"]').on('click', function(e) {
-      // Open in new tab and also scroll down if needed (or just open new tab)
-      // If you want to scroll the page to Recommended Devices instead,
-      // change the href to "#recommendedDevices" instead.
     });
     
     // Auto-scroll when an overview collapse element is shown
@@ -491,6 +640,7 @@
       plugList.innerHTML = "";
       settings.plugs.forEach((plug) => { addPlug(plug); });
       alert("Settings loaded.");
+      // Trigger a weather update after loading settings.
       document.getElementById("locationForm").dispatchEvent(new Event('submit'));
     }
     
@@ -695,7 +845,6 @@
       const b = Math.round(255 - (sliderValue / 100) * 255);
       const thumbColor = `rgb(${r},${g},${b})`;
       this.style.setProperty('--thumb-color', thumbColor);
-      // Set the entire track background to the same color
       this.style.background = `linear-gradient(to right, ${thumbColor} 0%, ${thumbColor} 100%)`;
       
       if (!weatherTimeData || !weatherWindData || !weatherUvData) return;
@@ -832,16 +981,16 @@
         </div>
         <div class="form-row">
           <div class="col">
-            <input type="number" class="form-control plugOnHours" placeholder="On Hours" min="0" value="${plugData ? plugData.onHours : 3}" title="Enter the number of hours this plug should be ON per cycle.">
-            <small class="form-text">Number of hours this plug should be ON per cycle (e.g., 3 if the plug is on for three hours per cycle).</small>
+            <input type="number" class="form-control plugOnHours" placeholder="On Hours" min="1" max="24" step="1" value="${plugData ? plugData.onHours : 3}" title="Enter the number of hours this plug should be ON per cycle (1-24, whole hours only).">
+            <small class="form-text">On Hours per cycle (1-24, whole hours).</small>
           </div>
           <div class="col">
-            <input type="number" class="form-control plugTotalHours" placeholder="Total Hours" min="1" value="${plugData ? plugData.totalHours : 6}" title="Enter the total number of hours in each cycle (e.g., 6 for a 6‑hour cycle).">
-            <small class="form-text">Total hours in each cycle (e.g., 6 hours).</small>
+            <input type="number" class="form-control plugTotalHours" placeholder="Total Hours" min="1" max="24" step="1" value="${plugData ? plugData.totalHours : 6}" title="Enter the total number of hours in each cycle (1-24, whole hours only).">
+            <small class="form-text">Total Hours per cycle (1-24, whole hours).</small>
           </div>
           <div class="col">
             <input type="number" step="0.1" class="form-control plugKwh" placeholder="kWh" min="0" value="${plugData ? plugData.kwh : 1.5}" title="Enter the device power consumption (in kWh).">
-            <small class="form-text">Power consumption in kWh when the plug is ON (e.g., 1.5).</small>
+            <small class="form-text">Power consumption in kWh when ON (e.g., 1.5).</small>
           </div>
         </div>
         <div class="form-group mt-2">
@@ -872,7 +1021,7 @@
             <h5>Forced Schedule Settings</h5>
             <div class="forcedRulesContainer"></div>
             <button type="button" class="btn btn-secondary btn-sm addForcedRule" title="Click to add a forced rule for this plug.">Add Forced Rule</button>
-            <small class="form-text">Define forced on/off rules (select multiple days if needed, and set the same hours for them).</small>
+            <small class="form-text">Define forced on/off rules (only whole hours allowed).</small>
           </div>
           <div class="historyLogSection mt-3">
             <h5>History Log</h5>
@@ -893,19 +1042,38 @@
       
       plugDiv.historyLog = [];
       
+      // Helper function to add a log entry and update the history table
+      function addLog(entry) {
+        plugDiv.historyLog.push(entry);
+        updateHistoryTable(plugDiv);
+      }
+      
       plugDiv.querySelector('.deletePlug').addEventListener('click', function() {
         plugList.removeChild(plugDiv);
       });
       
       plugDiv.querySelector('.testWebhookOn').addEventListener('click', function() {
         const webhook = plugDiv.querySelector('.webhookOn').value;
-        if (webhook) { const img = new Image(); img.src = webhook; console.log("Called webhook ON: " + webhook); }
-        else { alert("Please enter a webhook URL for ON"); }
+        if (webhook) { 
+          const img = new Image(); 
+          img.src = webhook; 
+          console.log("Triggered webhook ON: " + webhook);
+          addLog({ time: new Date().toLocaleTimeString(), state: "ON", timestamp: new Date().getTime() });
+        } else { 
+          alert("Please enter a webhook URL for ON"); 
+        }
       });
+      
       plugDiv.querySelector('.testWebhookOff').addEventListener('click', function() {
         const webhook = plugDiv.querySelector('.webhookOff').value;
-        if (webhook) { const img = new Image(); img.src = webhook; console.log("Called webhook OFF: " + webhook); }
-        else { alert("Please enter a webhook URL for OFF"); }
+        if (webhook) { 
+          const img = new Image(); 
+          img.src = webhook; 
+          console.log("Triggered webhook OFF: " + webhook);
+          addLog({ time: new Date().toLocaleTimeString(), state: "OFF", timestamp: new Date().getTime() });
+        } else { 
+          alert("Please enter a webhook URL for OFF"); 
+        }
       });
       
       plugDiv.querySelector('.addForcedRule').addEventListener('click', function() {
@@ -927,11 +1095,11 @@
           </div>
           <div class="col-3">
             <label>Start Time:</label>
-            <input type="time" class="form-control forcedRuleStart" value="08:00" title="Set the start time for this rule.">
+            <input type="time" class="form-control forcedRuleStart" value="08:00" step="3600" title="Set the start time (whole hours only).">
           </div>
           <div class="col-3">
             <label>End Time:</label>
-            <input type="time" class="form-control forcedRuleEnd" value="09:00" title="Set the end time for this rule.">
+            <input type="time" class="form-control forcedRuleEnd" value="09:00" step="3600" title="Set the end time (whole hours only).">
           </div>
           <div class="col-2">
             <label>State:</label>
@@ -970,11 +1138,11 @@
             </div>
             <div class="col-3">
               <label>Start Time:</label>
-              <input type="time" class="form-control forcedRuleStart" value="${rule.start}" title="Start time for this rule.">
+              <input type="time" class="form-control forcedRuleStart" value="${rule.start}" step="3600" title="Start time (whole hours only).">
             </div>
             <div class="col-3">
               <label>End Time:</label>
-              <input type="time" class="form-control forcedRuleEnd" value="${rule.end}" title="End time for this rule.">
+              <input type="time" class="form-control forcedRuleEnd" value="${rule.end}" step="3600" title="End time (whole hours only).">
             </div>
             <div class="col-2">
               <label>State:</label>
@@ -991,26 +1159,40 @@
           ruleDiv.querySelector('.removeForcedRule').addEventListener('click', function() { container.removeChild(ruleDiv); });
         });
       }
+      
+      // Listen for immediate changes on any input or select within the plug entry.
+      plugDiv.addEventListener('input', function() {
+        updatePlugSchedules();
+        checkPlugStates();
+        updateProfitInfographic();
+      });
+      plugDiv.addEventListener('change', function() {
+        updatePlugSchedules();
+        checkPlugStates();
+        updateProfitInfographic();
+      });
     }
     
     document.getElementById('addPlugBtn').addEventListener('click', function() { addPlug(); });
     
+    // Update history table: assign duration to each row (except the last) as the difference to the next log.
     function updateHistoryTable(plugEntry) {
       const tableBody = plugEntry.querySelector('.historyLogTable tbody');
       tableBody.innerHTML = "";
-      if (plugEntry.historyLog && plugEntry.historyLog.length > 0) {
-        plugEntry.historyLog.forEach((entry, i) => {
+      const logs = plugEntry.historyLog;
+      if (logs && logs.length > 0) {
+        for (let i = 0; i < logs.length; i++) {
           let durationText = "";
-          if (i > 0 && plugEntry.historyLog[i - 1].timestamp) {
-            const diff = entry.timestamp - plugEntry.historyLog[i - 1].timestamp;
+          if (i < logs.length - 1) {
+            const diff = logs[i+1].timestamp - logs[i].timestamp;
             const hours = Math.floor(diff / 3600000);
             const minutes = Math.floor((diff % 3600000) / 60000);
             durationText = `${hours}h ${minutes}m`;
           }
           const row = document.createElement('tr');
-          row.innerHTML = `<td>${entry.time}</td><td>${entry.state}</td><td>${durationText}</td>`;
+          row.innerHTML = `<td>${logs[i].time}</td><td>${logs[i].state}</td><td>${durationText}</td>`;
           tableBody.appendChild(row);
-        });
+        }
       } else {
         const row = document.createElement('tr');
         row.innerHTML = `<td colspan="3">No history available.</td>`;
@@ -1128,15 +1310,22 @@
           if (lastState !== newState) {
             if (newState === "on") {
               const webhook = entry.querySelector('.webhookOn').value;
-              if (webhook) { const img = new Image(); img.src = webhook; console.log("Triggered ON webhook for plug", idx, webhook); }
+              if (webhook) { 
+                const img = new Image(); 
+                img.src = webhook; 
+                console.log("Triggered webhook ON for plug", idx, webhook);
+              }
             } else {
               const webhook = entry.querySelector('.webhookOff').value;
-              if (webhook) { const img = new Image(); img.src = webhook; console.log("Triggered OFF webhook for plug", idx, webhook); }
+              if (webhook) { 
+                const img = new Image(); 
+                img.src = webhook; 
+                console.log("Triggered webhook OFF for plug", idx, webhook);
+              }
             }
             entry.dataset.state = newState;
-            const logEntry = { time: new Date().toLocaleTimeString(), state: newState.toUpperCase(), timestamp: new Date().getTime() };
-            if (!entry.historyLog) entry.historyLog = [];
-            entry.historyLog.push(logEntry);
+            // Log the automatic state change
+            entry.historyLog.push({ time: new Date().toLocaleTimeString(), state: newState.toUpperCase(), timestamp: new Date().getTime() });
             if (entry.historyLog.length > 50) entry.historyLog.shift();
             updateHistoryTable(entry);
           }
@@ -1178,46 +1367,116 @@
       }
     }, 60000);
     
-    let wakeLock = null;
-    async function requestWakeLock() {
-      try {
-        wakeLock = await navigator.wakeLock.request('screen');
-        console.log('Wake Lock is active');
-        wakeLock.addEventListener('release', () => {
-          console.log('Wake Lock was released');
+    // Set initial slider track color on page load
+    window.addEventListener("load", function() {
+      var slider = document.getElementById('energySlider');
+      var initialValue = parseInt(slider.value, 10);
+      const r = Math.round((initialValue / 100) * 255);
+      const g = Math.round((initialValue / 100) * 255);
+      const b = Math.round(255 - (initialValue / 100) * 255);
+      const thumbColor = `rgb(${r},${g},${b})`;
+      slider.style.setProperty('--thumb-color', thumbColor);
+      slider.style.background = `linear-gradient(to right, ${thumbColor} 0%, ${thumbColor} 100%)`;
+    });
+    
+    document.querySelectorAll('input[name="scheduleType"]').forEach(radio => {
+      radio.addEventListener('change', function() {
+        updatePlugSchedules();
+        checkPlugStates();
+        updateProfitInfographic();
+      });
+    });
+    
+    function groupTimesByDay(timeData) {
+      const groups = {};
+      timeData.forEach((t, i) => {
+        let date = t.split("T")[0];
+        if (!groups[date]) groups[date] = { times: [], indices: [] };
+        groups[date].times.push(t);
+        groups[date].indices.push(i);
+      });
+      const sortedDates = Object.keys(groups).sort();
+      return sortedDates.map(date => groups[date]);
+    }
+    
+    function computePlugScheduleForDay(onHours, totalHours, dayTimes) {
+      const dayLength = dayTimes.length;
+      function computeCycle(onHours, totalHours) {
+        onHours = Math.min(onHours, totalHours);
+        let pattern = new Array(totalHours).fill(0);
+        let positions = [];
+        for (let i = 0; i < onHours; i++) {
+          let pos = Math.round((i + 0.5) * totalHours / onHours - 0.5);
+          if (pos < 0) pos = 0;
+          if (pos >= totalHours) pos = totalHours - 1;
+          positions.push(pos);
+        }
+        positions.forEach(p => { pattern[p] = 1; });
+        return pattern;
+      }
+      const cycle = computeCycle(onHours, totalHours);
+      let schedule = [];
+      const cycles = Math.floor(dayLength / totalHours);
+      const remainder = dayLength % totalHours;
+      for (let i = 0; i < cycles; i++) { schedule = schedule.concat(cycle); }
+      schedule = schedule.concat(cycle.slice(0, remainder));
+      return schedule;
+    }
+    
+    function computeOptimalPlugScheduleForDay(onHours, totalHours, dayGroup, weight) {
+      const dayTimes = dayGroup.times;
+      const indices = dayGroup.indices;
+      const dayLength = dayTimes.length;
+      let schedule = [];
+      const cycles = Math.floor(dayLength / totalHours);
+      const remainder = dayLength % totalHours;
+      for (let c = 0; c < cycles; c++) {
+        const cycleIndices = indices.slice(c * totalHours, (c + 1) * totalHours);
+        const qualityCycle = cycleIndices.map(i => weight * parseFloat(weatherUvData[i]) + (1 - weight) * parseFloat(weatherWindData[i]));
+        let pattern = new Array(totalHours).fill(0);
+        let idxs = Array.from({length: totalHours}, (_, idx) => idx);
+        idxs.sort((a, b) => qualityCycle[b] - qualityCycle[a]);
+        for (let k = 0; k < Math.min(onHours, totalHours); k++) { pattern[idxs[k]] = 1; }
+        schedule = schedule.concat(pattern);
+      }
+      if (remainder > 0) {
+        const cycleIndices = indices.slice(cycles * totalHours);
+        const qualityCycle = cycleIndices.map(i => weight * parseFloat(weatherUvData[i]) + (1 - weight) * parseFloat(weatherWindData[i]));
+        let pattern = new Array(remainder).fill(0);
+        let idxs = Array.from({length: remainder}, (_, idx) => idx);
+        idxs.sort((a, b) => qualityCycle[b] - qualityCycle[a]);
+        for (let k = 0; k < Math.min(onHours, remainder); k++) { pattern[idxs[k]] = 1; }
+        schedule = schedule.concat(pattern);
+      }
+      return schedule;
+    }
+    
+    function applyForcedRules(entry, schedule) {
+      const forcedRules = entry.querySelectorAll('.forcedRule');
+      forcedRules.forEach(rule => {
+        const daysSelect = rule.querySelector('.forcedRuleDays');
+        const selectedDays = Array.from(daysSelect.selectedOptions).map(opt => opt.value);
+        const startTime = rule.querySelector('.forcedRuleStart').value;
+        const endTime = rule.querySelector('.forcedRuleEnd').value;
+        const forcedState = rule.querySelector('.forcedRuleState').value;
+        schedule = schedule.map((val, index) => {
+          const ts = new Date(weatherTimeData[index]);
+          const dayName = ts.toLocaleDateString('en-US', { weekday: 'short' });
+          if (!selectedDays.includes(dayName)) return val;
+          const minutes = ts.getHours() * 60 + ts.getMinutes();
+          const [startH, startM] = startTime.split(':').map(Number);
+          const [endH, endM] = endTime.split(':').map(Number);
+          const startMinutes = startH * 60 + startM;
+          const endMinutes = endH * 60 + endM;
+          let inInterval = (startMinutes <= endMinutes)
+                           ? (minutes >= startMinutes && minutes < endMinutes)
+                           : (minutes >= startMinutes || minutes < endMinutes);
+          if (inInterval) return forcedState === "on" ? 1 : 0;
+          return val;
         });
-      } catch (err) {
-        console.error(`${err.name}, ${err.message}`);
-      }
+      });
+      return schedule;
     }
-    function releaseWakeLock() {
-      if (wakeLock !== null) {
-        wakeLock.release();
-        wakeLock = null;
-        console.log('Wake Lock released');
-      }
-    }
-    
-    document.getElementById('preventScreensaverToggle')?.addEventListener('change', function() {
-      if (this.checked) { requestWakeLock(); }
-      else { releaseWakeLock(); }
-    });
-    
-    document.getElementById('updatePlugsBtn').addEventListener('click', function() {
-      updatePlugSchedules();
-      checkPlugStates();
-      updateProfitInfographic();
-    });
-    
-    window.onerror = function(message, source, lineno, colno, error) {
-      console.error("Global error caught:", message, source, lineno, colno, error);
-      setTimeout(function() {
-        location.reload();
-      }, 5000);
-      return false;
-    };
-    
-    // Additional overall settings event listeners can be added here if needed.
   </script>
 </body>
 </html>
