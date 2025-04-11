@@ -46,7 +46,7 @@
       background-color: #ffffff;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
-    /* Updated marketing text styles */
+    /* Marketing Text */
     #marketing a {
       color: #007bff;
       text-decoration: underline;
@@ -76,7 +76,7 @@
     #forecastSection, #smartPlugSettingsSection {
       margin-bottom: 40px;
     }
-    /* Plug Settings Panel as a modern card */
+    /* Plug Settings Panel */
     #plugSchedulePanel {
       background-color: #ffffff;
       border: 1px solid #e0e0e0;
@@ -100,7 +100,7 @@
       font-size: 0.85rem;
       color: #666;
     }
-    /* Graph Styling with a white background and clean border */
+    /* Graph Styling */
     #mergedGraph {
       border: 1px solid #e0e0e0;
       padding: 10px;
@@ -109,16 +109,16 @@
       width: 100%;
       height: 400px;
     }
-    /* Timer Styling inside navbar collapse */
+    /* Timer Styling in Navbar Collapse */
     #timerLabelCollapse {
       font-size: 1rem;
       color: #333;
     }
-    /* Navbar collapse background */
+    /* Navbar Collapse Background */
     .navbar-collapse {
       background-color: #ffffff;
     }
-    /* Overview Buttons and Cards: Modern blue buttons and white cards */
+    /* Overview Buttons and Cards */
     .overview-button {
       margin-bottom: 10px;
       background-color: #007bff;
@@ -151,7 +151,14 @@
       font-size: 0.85rem;
       color: #666;
     }
-    /* Slider Thumb and Track Styling using CSS Variables */
+    /* History Log Grouping Styles */
+    .logDateHeader {
+      background: #e9ecef;
+      padding: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    /* Slider Thumb and Track Styling */
     input[type="range"] {
       -webkit-appearance: none;
       width: 100%;
@@ -204,14 +211,13 @@
     <div class="collapse" id="navbarMain">
       <div class="p-3">
         <ul class="navbar-nav">
-          <!-- Navigation links can be added here if needed -->
+          <!-- Navigation links if needed -->
         </ul>
         <hr class="bg-secondary">
         <div class="mb-2">
           <strong id="timerLabelCollapse">Next Forecast:</strong> <span id="refreshTimer"></span>
         </div>
         <div class="d-flex justify-content-between">
-          <!-- Use type="button" so they don't trigger form submission -->
           <button type="button" class="btn btn-success btn-sm" id="saveSettingsBtn" title="Save your current configuration.">Save Settings</button>
           <button type="button" class="btn btn-warning btn-sm" id="loadSettingsBtn" title="Load your previously saved configuration.">Load Settings</button>
         </div>
@@ -468,7 +474,7 @@
       </table>
     </div>
     
-    <!-- Overview Sections (Moved to the Bottom) -->
+    <!-- Overview Sections (at the bottom) -->
     <div class="mt-5">
       <div class="row">
         <div class="col-md-3">
@@ -543,7 +549,7 @@
       </div>
     </div>
     
-    <!-- Extra space at bottom -->
+    <!-- Extra bottom space -->
     <div style="height: 100px;"></div>
     
   </div>
@@ -557,7 +563,7 @@
       $('[data-toggle="tooltip"]').tooltip();
     });
     
-    // Auto-scroll when an overview collapse element is shown
+    // Auto-scroll for expanded overview sections
     $('.collapse').on('shown.bs.collapse', function () {
       $('html, body').animate({
         scrollTop: $(this).offset().top - 50
@@ -565,15 +571,15 @@
     });
     
     /*************************************
-     * 1) GLOBAL VARIABLES & TIMER SETUP *
+     * GLOBAL VARIABLES & TIMER SETUP
      *************************************/
-    let weatherTimeData = null;
-    let weatherWindData = null;
-    let weatherUvData = null;
-    let globalLineTraces = [];
-    let globalMergedLayout = null;
-    let lastWeatherUpdate = null;
-    let chartInitialized = false;
+    let weatherTimeData = null,
+        weatherWindData = null,
+        weatherUvData = null,
+        globalLineTraces = [],
+        globalMergedLayout = null,
+        lastWeatherUpdate = null,
+        chartInitialized = false;
     
     // Timer for forecast refresh countdown
     function updateTimer() {
@@ -594,7 +600,7 @@
     updateTimer();
     
     /**************************************
-     * 2) SAVE/LOAD SETTINGS FROM STORAGE *
+     * SAVE/LOAD SETTINGS FROM STORAGE
      **************************************/
     function saveSettings() {
       const settings = {
@@ -643,7 +649,6 @@
       plugList.innerHTML = "";
       settings.plugs.forEach((plug) => { addPlug(plug); });
       alert("Settings loaded.");
-      // Trigger a weather update after loading settings.
       document.getElementById("locationForm").dispatchEvent(new Event('submit'));
     }
     
@@ -651,7 +656,7 @@
     document.getElementById('loadSettingsBtn').addEventListener('click', loadSettings);
     
     /****************************************
-     * 3) GEOLOCATION & WEATHER RETRIEVAL    *
+     * GEOLOCATION & WEATHER RETRIEVAL
      ****************************************/
     function setLocationDisplay(data, latitude, longitude) {
       const address = data.address || {};
@@ -661,7 +666,6 @@
       if (address.country) { displayText += `<br>Country: ${address.country}`; }
       document.getElementById('locationDisplay').innerHTML = `<p>${displayText}</p>`;
       const manualField = document.getElementById('manualLocation');
-      // Automatically fill the manual location field and trigger weather retrieval if a place is found.
       if (place) { 
         manualField.value = place; 
         document.getElementById("locationForm").dispatchEvent(new Event('submit'));
@@ -815,7 +819,6 @@
                     Plotly.newPlot('mergedGraph', globalLineTraces, globalMergedLayout, { responsive: true });
                     chartInitialized = true;
                   }
-                  // Automatically add a plug if none exists and update schedules
                   if(document.getElementById('plugList').children.length === 0){
                     addPlug();
                   }
@@ -835,21 +838,18 @@
     });
     
     /*******************************************
-     * 4) ENERGY SLIDER & PLUG SCHEDULE UPDATE  *
+     * ENERGY SLIDER & PLUG SCHEDULE UPDATE
      *******************************************/
     document.getElementById('energySlider').addEventListener('input', function() {
       const sliderValue = parseInt(this.value, 10);
       document.getElementById('sunWeightLabel').textContent = sliderValue;
       document.getElementById('windWeightLabel').textContent = 100 - sliderValue;
-      
-      // Compute thumb and track color: 0 => blue (0,0,255), 100 => yellow (255,255,0)
       const r = Math.round((sliderValue / 100) * 255);
       const g = Math.round((sliderValue / 100) * 255);
       const b = Math.round(255 - (sliderValue / 100) * 255);
       const thumbColor = `rgb(${r},${g},${b})`;
       this.style.setProperty('--thumb-color', thumbColor);
       this.style.background = `linear-gradient(to right, ${thumbColor} 0%, ${thumbColor} 100%)`;
-      
       if (!weatherTimeData || !weatherWindData || !weatherUvData) return;
       const weight = sliderValue / 100;
       const newRenewable = weatherTimeData.map((_, i) => weight * parseFloat(weatherUvData[i]) + (1 - weight) * parseFloat(weatherWindData[i]));
@@ -924,23 +924,34 @@
       let schedule = [];
       const cycles = Math.floor(dayLength / totalHours);
       const remainder = dayLength % totalHours;
+      // Process full cycles using quality-based scheduling.
       for (let c = 0; c < cycles; c++) {
         const cycleIndices = indices.slice(c * totalHours, (c + 1) * totalHours);
         const qualityCycle = cycleIndices.map(i => weight * parseFloat(weatherUvData[i]) + (1 - weight) * parseFloat(weatherWindData[i]));
         let pattern = new Array(totalHours).fill(0);
-        let idxs = Array.from({length: totalHours}, (_, idx) => idx);
+        let idxs = Array.from({ length: totalHours }, (_, idx) => idx);
         idxs.sort((a, b) => qualityCycle[b] - qualityCycle[a]);
-        for (let k = 0; k < Math.min(onHours, totalHours); k++) { pattern[idxs[k]] = 1; }
+        for (let k = 0; k < onHours; k++) { pattern[idxs[k]] = 1; }
         schedule = schedule.concat(pattern);
       }
       if (remainder > 0) {
-        const cycleIndices = indices.slice(cycles * totalHours);
-        const qualityCycle = cycleIndices.map(i => weight * parseFloat(weatherUvData[i]) + (1 - weight) * parseFloat(weatherWindData[i]));
-        let pattern = new Array(remainder).fill(0);
-        let idxs = Array.from({length: remainder}, (_, idx) => idx);
-        idxs.sort((a, b) => qualityCycle[b] - qualityCycle[a]);
-        for (let k = 0; k < Math.min(onHours, remainder); k++) { pattern[idxs[k]] = 1; }
-        schedule = schedule.concat(pattern);
+        // For partial cycle, mimic the user planned schedule.
+        function computeCycle(onHours, totalHours) {
+          onHours = Math.min(onHours, totalHours);
+          let pattern = new Array(totalHours).fill(0);
+          let positions = [];
+          for (let i = 0; i < onHours; i++) {
+            let pos = Math.round((i + 0.5) * totalHours / onHours - 0.5);
+            if (pos < 0) pos = 0;
+            if (pos >= totalHours) pos = totalHours - 1;
+            positions.push(pos);
+          }
+          positions.forEach(p => { pattern[p] = 1; });
+          return pattern;
+        }
+        let userCyclePattern = computeCycle(onHours, totalHours);
+        let remainderPattern = userCyclePattern.slice(0, remainder);
+        schedule = schedule.concat(remainderPattern);
       }
       return schedule;
     }
@@ -963,8 +974,8 @@
           const startMinutes = startH * 60 + startM;
           const endMinutes = endH * 60 + endM;
           let inInterval = (startMinutes <= endMinutes)
-                           ? (minutes >= startMinutes && minutes < endMinutes)
-                           : (minutes >= startMinutes || minutes < endMinutes);
+                          ? (minutes >= startMinutes && minutes < endMinutes)
+                          : (minutes >= startMinutes || minutes < endMinutes);
           if (inInterval) return forcedState === "on" ? 1 : 0;
           return val;
         });
@@ -984,15 +995,15 @@
         </div>
         <div class="form-row">
           <div class="col">
-            <input type="number" class="form-control plugOnHours" placeholder="On Hours" min="1" max="24" step="1" value="${plugData ? plugData.onHours : 3}" title="Enter the number of hours this plug should be ON per cycle (1-24, whole hours only).">
+            <input type="number" class="form-control plugOnHours" placeholder="On Hours" min="1" max="24" step="1" value="${plugData ? plugData.onHours : 3}" title="Enter hours this plug should be ON per cycle (1-24, whole hours only).">
             <small class="form-text">On Hours per cycle (1-24, whole hours).</small>
           </div>
           <div class="col">
-            <input type="number" class="form-control plugTotalHours" placeholder="Total Hours" min="1" max="24" step="1" value="${plugData ? plugData.totalHours : 6}" title="Enter the total number of hours in each cycle (1-24, whole hours only).">
+            <input type="number" class="form-control plugTotalHours" placeholder="Total Hours" min="1" max="24" step="1" value="${plugData ? plugData.totalHours : 6}" title="Enter total hours in each cycle (1-24, whole hours only).">
             <small class="form-text">Total Hours per cycle (1-24, whole hours).</small>
           </div>
           <div class="col">
-            <input type="number" step="0.1" class="form-control plugKwh" placeholder="kWh" min="0" value="${plugData ? plugData.kwh : 1.5}" title="Enter the device power consumption (in kWh).">
+            <input type="number" step="0.1" class="form-control plugKwh" placeholder="kWh" min="0" value="${plugData ? plugData.kwh : 1.5}" title="Enter device power consumption in kWh.">
             <small class="form-text">Power consumption in kWh when ON (e.g., 1.5).</small>
           </div>
         </div>
@@ -1016,28 +1027,20 @@
           </small>
           <button type="button" class="btn btn-sm btn-secondary testWebhookOff mt-1" title="Click to test the OFF webhook.">Test OFF Webhook</button>
         </div>
-        <button type="button" class="btn btn-danger btn-sm deletePlug" title="Click to remove this plug configuration.">Delete Plug</button>
+        <button type="button" class="btn btn-danger btn-sm deletePlug" title="Remove this plug configuration.">Delete Plug</button>
         <div class="plugStatus" style="margin-top:5px;">Status: UNKNOWN</div>
-        <button class="btn btn-sm btn-info mt-2 toggleAdvancedSettings" type="button" data-toggle="collapse" data-target="#advancedSettings-${plugIndex}" title="Click to view advanced settings for this plug.">Toggle Advanced Settings</button>
+        <button class="btn btn-sm btn-info mt-2 toggleAdvancedSettings" type="button" data-toggle="collapse" data-target="#advancedSettings-${plugIndex}" title="Toggle advanced settings for this plug.">Toggle Advanced Settings</button>
         <div class="collapse plugAdvancedSettings" id="advancedSettings-${plugIndex}">
           <div class="forcedScheduleSection mt-2">
             <h5>Forced Schedule Settings</h5>
             <div class="forcedRulesContainer"></div>
-            <button type="button" class="btn btn-secondary btn-sm addForcedRule" title="Click to add a forced rule for this plug.">Add Forced Rule</button>
+            <button type="button" class="btn btn-secondary btn-sm addForcedRule" title="Add a forced rule for this plug.">Add Forced Rule</button>
             <small class="form-text">Define forced on/off rules (only whole hours allowed).</small>
           </div>
           <div class="historyLogSection mt-3">
             <h5>History Log</h5>
-            <table class="table table-sm historyLogTable">
-              <thead>
-                <tr>
-                  <th>Time</th>
-                  <th>Status</th>
-                  <th>Duration</th>
-                </tr>
-              </thead>
-              <tbody></tbody>
-            </table>
+            <!-- Instead of one table, we use a container that will hold collapsible tables grouped by date -->
+            <div class="historyLogTableContainer"></div>
           </div>
         </div>
       `;
@@ -1061,7 +1064,7 @@
           const img = new Image(); 
           img.src = webhook; 
           console.log("Triggered webhook ON: " + webhook);
-          addLog({ time: new Date().toLocaleTimeString(), state: "ON", timestamp: new Date().getTime() });
+          addLog({ time: new Date().toLocaleTimeString(), date: new Date().toLocaleDateString(), state: "ON", timestamp: new Date().getTime() });
         } else { 
           alert("Please enter a webhook URL for ON"); 
         }
@@ -1073,7 +1076,7 @@
           const img = new Image(); 
           img.src = webhook; 
           console.log("Triggered webhook OFF: " + webhook);
-          addLog({ time: new Date().toLocaleTimeString(), state: "OFF", timestamp: new Date().getTime() });
+          addLog({ time: new Date().toLocaleTimeString(), date: new Date().toLocaleDateString(), state: "OFF", timestamp: new Date().getTime() });
         } else { 
           alert("Please enter a webhook URL for OFF"); 
         }
@@ -1112,7 +1115,7 @@
             </select>
           </div>
           <div class="col-12">
-            <button type="button" class="btn btn-danger btn-sm removeForcedRule mt-1" title="Click to remove this rule.">Remove Rule</button>
+            <button type="button" class="btn btn-danger btn-sm removeForcedRule mt-1" title="Remove this rule.">Remove Rule</button>
           </div>
         `;
         container.appendChild(ruleDiv);
@@ -1163,7 +1166,7 @@
         });
       }
       
-      // Listen for immediate changes on any input or select within the plug entry.
+      // Listen for immediate changes on plug settings.
       plugDiv.addEventListener('input', function() {
         updatePlugSchedules();
         checkPlugStates();
@@ -1178,29 +1181,55 @@
     
     document.getElementById('addPlugBtn').addEventListener('click', function() { addPlug(); });
     
-    // Update history table: assign duration to each row (except the last) as the difference to the next log.
+    // Update history log grouped by date.
     function updateHistoryTable(plugEntry) {
-      const tableBody = plugEntry.querySelector('.historyLogTable tbody');
-      tableBody.innerHTML = "";
+      const container = plugEntry.querySelector('.historyLogTableContainer');
+      container.innerHTML = "";
       const logs = plugEntry.historyLog;
-      if (logs && logs.length > 0) {
-        for (let i = 0; i < logs.length; i++) {
+      if (!logs || logs.length === 0) {
+        container.innerHTML = "<p>No history available.</p>";
+        return;
+      }
+      // Group logs by date.
+      const logsByDate = {};
+      logs.forEach(log => {
+        if (!logsByDate[log.date]) logsByDate[log.date] = [];
+        logsByDate[log.date].push(log);
+      });
+      const sortedDates = Object.keys(logsByDate).sort();
+      sortedDates.forEach(date => {
+        const header = document.createElement('div');
+        header.className = "logDateHeader";
+        header.textContent = date;
+        // Create a table for logs of this date.
+        const table = document.createElement('table');
+        table.className = "table table-sm";
+        const thead = document.createElement('thead');
+        thead.innerHTML = "<tr><th>Time</th><th>Status</th><th>Duration</th></tr>";
+        table.appendChild(thead);
+        const tbody = document.createElement('tbody');
+        const dayLogs = logsByDate[date];
+        for (let i = 0; i < dayLogs.length; i++) {
           let durationText = "";
-          if (i < logs.length - 1) {
-            const diff = logs[i+1].timestamp - logs[i].timestamp;
+          if (i < dayLogs.length - 1) {
+            const diff = dayLogs[i + 1].timestamp - dayLogs[i].timestamp;
             const hours = Math.floor(diff / 3600000);
             const minutes = Math.floor((diff % 3600000) / 60000);
             durationText = `${hours}h ${minutes}m`;
           }
           const row = document.createElement('tr');
-          row.innerHTML = `<td>${logs[i].time}</td><td>${logs[i].state}</td><td>${durationText}</td>`;
-          tableBody.appendChild(row);
+          row.innerHTML = `<td>${dayLogs[i].time}</td><td>${dayLogs[i].state}</td><td>${durationText}</td>`;
+          tbody.appendChild(row);
         }
-      } else {
-        const row = document.createElement('tr');
-        row.innerHTML = `<td colspan="3">No history available.</td>`;
-        tableBody.appendChild(row);
-      }
+        table.appendChild(tbody);
+        // Initially collapse the table.
+        table.style.display = "none";
+        header.addEventListener('click', function() {
+          table.style.display = (table.style.display === "none") ? "table" : "none";
+        });
+        container.appendChild(header);
+        container.appendChild(table);
+      });
     }
     
     function updatePlugSchedules() {
@@ -1243,7 +1272,7 @@
         optimalPlugTraces.push(traceOptimal);
       });
       const scheduleType = document.querySelector('input[name="scheduleType"]:checked').value;
-      let selectedPlugTraces = scheduleType === "user" ? plugTraces : optimalPlugTraces;
+      const selectedPlugTraces = (scheduleType === "user") ? plugTraces : optimalPlugTraces;
       const allTraces = globalLineTraces.concat(selectedPlugTraces);
       globalMergedLayout.barmode = 'stack';
       if (chartInitialized) {
@@ -1277,8 +1306,7 @@
         });
         totalRescheduledEnergy += plugRescheduled;
       });
-      const profitDiv = document.getElementById('profitInfographicValue');
-      profitDiv.innerHTML = `<p>${totalRescheduledEnergy.toFixed(2)} kWh</p>`;
+      document.getElementById('profitInfographicValue').innerHTML = `<p>${totalRescheduledEnergy.toFixed(2)} kWh</p>`;
     }
     
     function checkPlugStates() {
@@ -1308,8 +1336,8 @@
           });
           schedule = applyForcedRules(entry, schedule);
           const desiredState = schedule[currentIndex] === 1;
-          let lastState = entry.dataset.state;
-          let newState = desiredState ? "on" : "off";
+          const lastState = entry.dataset.state;
+          const newState = desiredState ? "on" : "off";
           if (lastState !== newState) {
             if (newState === "on") {
               const webhook = entry.querySelector('.webhookOn').value;
@@ -1327,12 +1355,12 @@
               }
             }
             entry.dataset.state = newState;
-            // Log the automatic state change
-            entry.historyLog.push({ time: new Date().toLocaleTimeString(), state: newState.toUpperCase(), timestamp: new Date().getTime() });
+            // Log the automatic state change (with date included)
+            entry.historyLog.push({ time: new Date().toLocaleTimeString(), date: new Date().toLocaleDateString(), state: newState.toUpperCase(), timestamp: new Date().getTime() });
             if (entry.historyLog.length > 50) entry.historyLog.shift();
             updateHistoryTable(entry);
           }
-          let statusIndicator = entry.querySelector('.plugStatus');
+          const statusIndicator = entry.querySelector('.plugStatus');
           if (statusIndicator) { statusIndicator.innerText = "Status: " + newState.toUpperCase(); }
         });
       } catch (error) {
@@ -1370,16 +1398,37 @@
       }
     }, 60000);
     
-    // Set initial slider track color on page load
+    // Set initial slider track color on load
     window.addEventListener("load", function() {
-      var slider = document.getElementById('energySlider');
-      var initialValue = parseInt(slider.value, 10);
+      const slider = document.getElementById('energySlider');
+      const initialValue = parseInt(slider.value, 10);
       const r = Math.round((initialValue / 100) * 255);
       const g = Math.round((initialValue / 100) * 255);
       const b = Math.round(255 - (initialValue / 100) * 255);
       const thumbColor = `rgb(${r},${g},${b})`;
       slider.style.setProperty('--thumb-color', thumbColor);
       slider.style.background = `linear-gradient(to right, ${thumbColor} 0%, ${thumbColor} 100%)`;
+    });
+    
+    document.getElementById('energySlider').addEventListener('input', function() {
+      const sliderValue = parseInt(this.value, 10);
+      document.getElementById('sunWeightLabel').textContent = sliderValue;
+      document.getElementById('windWeightLabel').textContent = 100 - sliderValue;
+      const r = Math.round((sliderValue / 100) * 255);
+      const g = Math.round((sliderValue / 100) * 255);
+      const b = Math.round(255 - (sliderValue / 100) * 255);
+      const thumbColor = `rgb(${r},${g},${b})`;
+      this.style.setProperty('--thumb-color', thumbColor);
+      this.style.background = `linear-gradient(to right, ${thumbColor} 0%, ${thumbColor} 100%)`;
+      if (!weatherTimeData || !weatherWindData || !weatherUvData) return;
+      const weight = sliderValue / 100;
+      const newRenewable = weatherTimeData.map((_, i) => weight * parseFloat(weatherUvData[i]) + (1 - weight) * parseFloat(weatherWindData[i]));
+      Plotly.restyle('mergedGraph', { y: [newRenewable] }, [2]);
+      if (document.querySelector('input[name="scheduleType"]:checked').value === "optimized") {
+        updatePlugSchedules();
+        checkPlugStates();
+        updateProfitInfographic();
+      }
     });
     
     document.querySelectorAll('input[name="scheduleType"]').forEach(radio => {
@@ -1389,97 +1438,6 @@
         updateProfitInfographic();
       });
     });
-    
-    function groupTimesByDay(timeData) {
-      const groups = {};
-      timeData.forEach((t, i) => {
-        let date = t.split("T")[0];
-        if (!groups[date]) groups[date] = { times: [], indices: [] };
-        groups[date].times.push(t);
-        groups[date].indices.push(i);
-      });
-      const sortedDates = Object.keys(groups).sort();
-      return sortedDates.map(date => groups[date]);
-    }
-    
-    function computePlugScheduleForDay(onHours, totalHours, dayTimes) {
-      const dayLength = dayTimes.length;
-      function computeCycle(onHours, totalHours) {
-        onHours = Math.min(onHours, totalHours);
-        let pattern = new Array(totalHours).fill(0);
-        let positions = [];
-        for (let i = 0; i < onHours; i++) {
-          let pos = Math.round((i + 0.5) * totalHours / onHours - 0.5);
-          if (pos < 0) pos = 0;
-          if (pos >= totalHours) pos = totalHours - 1;
-          positions.push(pos);
-        }
-        positions.forEach(p => { pattern[p] = 1; });
-        return pattern;
-      }
-      const cycle = computeCycle(onHours, totalHours);
-      let schedule = [];
-      const cycles = Math.floor(dayLength / totalHours);
-      const remainder = dayLength % totalHours;
-      for (let i = 0; i < cycles; i++) { schedule = schedule.concat(cycle); }
-      schedule = schedule.concat(cycle.slice(0, remainder));
-      return schedule;
-    }
-    
-    function computeOptimalPlugScheduleForDay(onHours, totalHours, dayGroup, weight) {
-      const dayTimes = dayGroup.times;
-      const indices = dayGroup.indices;
-      const dayLength = dayTimes.length;
-      let schedule = [];
-      const cycles = Math.floor(dayLength / totalHours);
-      const remainder = dayLength % totalHours;
-      for (let c = 0; c < cycles; c++) {
-        const cycleIndices = indices.slice(c * totalHours, (c + 1) * totalHours);
-        const qualityCycle = cycleIndices.map(i => weight * parseFloat(weatherUvData[i]) + (1 - weight) * parseFloat(weatherWindData[i]));
-        let pattern = new Array(totalHours).fill(0);
-        let idxs = Array.from({length: totalHours}, (_, idx) => idx);
-        idxs.sort((a, b) => qualityCycle[b] - qualityCycle[a]);
-        for (let k = 0; k < Math.min(onHours, totalHours); k++) { pattern[idxs[k]] = 1; }
-        schedule = schedule.concat(pattern);
-      }
-      if (remainder > 0) {
-        const cycleIndices = indices.slice(cycles * totalHours);
-        const qualityCycle = cycleIndices.map(i => weight * parseFloat(weatherUvData[i]) + (1 - weight) * parseFloat(weatherWindData[i]));
-        let pattern = new Array(remainder).fill(0);
-        let idxs = Array.from({length: remainder}, (_, idx) => idx);
-        idxs.sort((a, b) => qualityCycle[b] - qualityCycle[a]);
-        for (let k = 0; k < Math.min(onHours, remainder); k++) { pattern[idxs[k]] = 1; }
-        schedule = schedule.concat(pattern);
-      }
-      return schedule;
-    }
-    
-    function applyForcedRules(entry, schedule) {
-      const forcedRules = entry.querySelectorAll('.forcedRule');
-      forcedRules.forEach(rule => {
-        const daysSelect = rule.querySelector('.forcedRuleDays');
-        const selectedDays = Array.from(daysSelect.selectedOptions).map(opt => opt.value);
-        const startTime = rule.querySelector('.forcedRuleStart').value;
-        const endTime = rule.querySelector('.forcedRuleEnd').value;
-        const forcedState = rule.querySelector('.forcedRuleState').value;
-        schedule = schedule.map((val, index) => {
-          const ts = new Date(weatherTimeData[index]);
-          const dayName = ts.toLocaleDateString('en-US', { weekday: 'short' });
-          if (!selectedDays.includes(dayName)) return val;
-          const minutes = ts.getHours() * 60 + ts.getMinutes();
-          const [startH, startM] = startTime.split(':').map(Number);
-          const [endH, endM] = endTime.split(':').map(Number);
-          const startMinutes = startH * 60 + startM;
-          const endMinutes = endH * 60 + endM;
-          let inInterval = (startMinutes <= endMinutes)
-                           ? (minutes >= startMinutes && minutes < endMinutes)
-                           : (minutes >= startMinutes || minutes < endMinutes);
-          if (inInterval) return forcedState === "on" ? 1 : 0;
-          return val;
-        });
-      });
-      return schedule;
-    }
   </script>
 </body>
 </html>
